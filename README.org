@@ -2,3 +2,27 @@
 #+AUTHOR: Mathieu Marques
 
 [[./LICENSE.org][https://img.shields.io/github/license/angrybacon/vntlnk.svg?style=flat-square]]
+
+** Quickstart
+
+This assumes you know your way around a Next.js application.
+
+#+BEGIN_SRC sh
+pnpm install
+pnpm dev
+#+END_SRC
+
+** Samples
+
+You'll find sample PDF files under =samples/=.
+
+- =vntlnk.scanned.pdf= ::
+  A /scanned/ PDF that was not augmented with a searchable layer.
+
+- =vntlnk.searchable.pdf= (currently missing) ::
+  An image-based PDF like the /scanned/ kind but with an invisible /searchable/
+  layer that follows the existing imagery.
+
+- =vntlnk.true.pdf= (currently missing) ::
+  A /true/ PDF that was digitally formed. Expose text node as you would expect
+  and thus does not need OCR.

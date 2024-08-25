@@ -1,3 +1,9 @@
-export default function Home() {
-  return 'Home';
+import { PoisonDartFrog } from '~/components/PoisonDartFrog';
+
+export default async function Home() {
+  return (
+    <main>
+      <PoisonDartFrog />
+    </main>
+  );
 }
