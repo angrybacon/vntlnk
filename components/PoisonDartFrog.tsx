@@ -21,8 +21,9 @@ const read = async (
   meta: Object;
 }> => {
   const pdf = await getDocument(URL.createObjectURL(file)).promise;
-  // TODO How about multiple pages?
+  // TODO Handle multiple pages
   const page = await pdf.getPage(1);
+  // TODO Retrieve `page` and `meta` concurrently
   const meta = await pdf.getMetadata();
   const text = await page.getTextContent();
   if (text.items.length) {
@@ -68,12 +69,15 @@ const read = async (
   };
 };
 
+// TODO Find the actual statistic names
 type Filtered = {
+  id: number;
   mga: string;
   pg: string;
   pga: string;
   player: string;
   rank: string;
+  score: string;
 };
 
 type Line = { id: number; text: string };
@@ -81,23 +85,33 @@ type Line = { id: number; text: string };
 const FILTER_PATTERN = '^(\\d+) (.+) (\\d+) (\\d+) (\\d+) (\\d+)$';
 
 export const PoisonDartFrog = () => {
+  const [confidence, setConfidence] = useState<number>();
   const [filter, setFilter] = useState(FILTER_PATTERN);
   const [filtered, setFiltered] = useState<Filtered[]>([]);
   const [lines, setLines] = useState<Line[]>();
 
   useEffect(() => {
+    // TODO Handle filter syntax errors
     if (lines) {
-      const candidates = lines.reduce<Filtered[]>((accumulator, { text }) => {
-        const [, rank, player, mga, pg, pga] =
-          text.match(new RegExp(filter)) || [];
-        if (mga && pg && pga && player && rank) {
-          accumulator.push({ mga, pg, pga, player, rank });
-        }
-        return accumulator;
-      }, []);
+      const candidates = lines.reduce<Filtered[]>(
+        (accumulator, { text }, index) => {
+          const [, rank, player, score, mga, pg, pga] =
+            text.match(new RegExp(filter)) || [];
+          // TODO Dry it up
+          if (mga && pg && pga && player && rank && score) {
+            // TODO How about color-coded confidence for each value?
+            accumulator.push({ id: index, mga, pg, pga, player, rank, score });
+          }
+          return accumulator;
+        },
+        [],
+      );
       setFiltered(candidates);
     }
   }, [filter, lines]);
+
+  // TODO Allow resetting the data
+  const _onReset = () => {};
 
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -105,7 +119,8 @@ export const PoisonDartFrog = () => {
       // TODO Handle more gracefully
       throw new Error('No file found');
     }
-    read(files[0]).then(({ items }) => {
+    read(files[0]).then(({ confidence, items }) => {
+      setConfidence(confidence);
       setLines(items.filter((item) => !!item.text.length));
     });
   };
@@ -133,26 +148,22 @@ export const PoisonDartFrog = () => {
                 <tr>
                   <th>Rank</th>
                   <th>Player</th>
-                  <th>MGA</th>
-                  <th>PG</th>
-                  <th>PGA</th>
+                  <th>Score</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(({ mga, pg, pga, player, rank }) => (
-                  <tr key={`${rank} ${player}`}>
+                {filtered.map(({ id, player, rank, score }) => (
+                  <tr key={id}>
                     <td>{rank}</td>
                     <td>{player}</td>
-                    <td>{mga}</td>
-                    <td>{pg}</td>
-                    <td>{pga}</td>
+                    <td>{score}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <div className={styles.parsed}>
-            Parsed
+            Parsed {confidence !== undefined && `(confidence: ${confidence}%)`}
             <pre>{lines.map(({ text }) => text).join('\n')}</pre>
           </div>
         </>

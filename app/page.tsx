@@ -1,6 +1,6 @@
 import { PoisonDartFrog } from '~/components/PoisonDartFrog';
 
-export default async function Home() {
+export default function Home() {
   return (
     <main>
       <PoisonDartFrog />
