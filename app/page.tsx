@@ -1,9 +1,5 @@
-import { PoisonDartFrog } from '~/components/PoisonDartFrog';
+import { PoisonDartFrog } from '~/modules/PoisonDartFrog/PoisonDartFrog';
 
 export default function Home() {
-  return (
-    <main>
-      <PoisonDartFrog />
-    </main>
-  );
+  return <PoisonDartFrog />;
 }

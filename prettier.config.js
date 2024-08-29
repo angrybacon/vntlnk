@@ -4,6 +4,7 @@ module.exports = {
     '<THIRD_PARTY_MODULES>',
     '',
     '^~/',
+    '',
     '^[.]',
   ],
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
