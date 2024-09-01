@@ -10,24 +10,17 @@ import { type ChangeEvent } from 'react';
 import { Paper } from '~/components/Paper';
 import { COLUMNS } from '~/modules/PoisonDartFrog/constants';
 
-const FILTERS = ['rank', 'player', 'score'] as const;
-
-type Filter = (typeof FILTERS)[number];
-
 type Props = {
-  onFilter(filter: Filter, value: boolean): void;
+  onFilter(name: string, value: boolean): void;
   onQuery(query: string): void;
-  columns: readonly string[];
+  columns: Record<string, boolean>;
   query: string;
   sx: SystemStyleObject;
 };
 
 export const Filters = ({ columns, onFilter, onQuery, query, sx }: Props) => {
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    if ((FILTERS as readonly string[]).includes(target.name)) {
-      onFilter(target.name as Filter, target.checked);
-    }
-  };
+  const handleFilter = ({ target }: ChangeEvent<HTMLInputElement>) =>
+    onFilter(target.name, target.checked);
 
   return (
     <Paper sx={sx}>
@@ -40,12 +33,14 @@ export const Filters = ({ columns, onFilter, onQuery, query, sx }: Props) => {
         value={query}
       />
       <FormGroup row sx={{ gap: 1 }}>
-        {COLUMNS.map((f) => (
+        {Object.keys(COLUMNS).map((column) => (
           <FormControlLabel
-            control={<Checkbox checked={columns[f]} onChange={handleChange} />}
-            key={f}
-            label={<code>{f}</code>}
-            name={f}
+            control={
+              <Checkbox checked={columns[column]} onChange={handleFilter} />
+            }
+            key={column}
+            label={<code>{column}</code>}
+            name={column}
             sx={{ userSelect: 'none' }}
           />
         ))}

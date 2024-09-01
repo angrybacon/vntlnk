@@ -23,7 +23,7 @@ type Row = {
 };
 
 export const PoisonDartFrog = () => {
-  const [columns, setColumns] = useState(COLUMNS);
+  const [columns, setColumns] = useState({ ...COLUMNS });
   const [confidence, setConfidence] = useState<number>();
   const [lines, setLines] = useState<{ id: number; text: string }[]>(MOCKS);
   const [query, setQuery] = useState(QUERY_PATTERN);
@@ -46,8 +46,8 @@ export const PoisonDartFrog = () => {
     }
   }, [query, lines]);
 
-  const onFilter = (filter: keyof typeof columns, value: boolean) =>
-    setColumns((previous) => ({ ...previous, [filter]: value }));
+  const onFilter = (name: string, value: boolean) =>
+    setColumns({ ...columns, [name]: value });
 
   const onRead = (context: {
     confidence: number;
@@ -63,6 +63,7 @@ export const PoisonDartFrog = () => {
   return (
     <Box
       sx={{
+        // FIXME Doesn't stack cells towards the top
         alignItems: 'start',
         display: 'grid',
         gap: 3,
@@ -79,7 +80,7 @@ export const PoisonDartFrog = () => {
             query={query}
             sx={{ gridArea: 'filters' }}
           />
-          <Results rows={rows} sx={{ gridArea: 'results' }} />
+          <Results columns={columns} rows={rows} sx={{ gridArea: 'results' }} />
           <Parsed
             confidence={confidence}
             lines={lines}

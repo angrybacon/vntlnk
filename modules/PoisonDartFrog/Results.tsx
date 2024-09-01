@@ -12,8 +12,8 @@ import { type SystemStyleObject } from '@mui/system';
 import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
 
 type Props = {
-  columns: Record<string, boolean>;
-  rows: ({ id: number } & { [key in (typeof COLUMNS)[number]]: string })[];
+  columns: typeof COLUMNS;
+  rows: ({ id: number } & { [key in keyof typeof COLUMNS]: string })[];
   sx: SystemStyleObject;
 };
 
@@ -22,17 +22,23 @@ export const Results = ({ columns, rows, sx }: Props) => (
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>Rank</TableCell>
-          <TableCell>Player</TableCell>
-          <TableCell>Score</TableCell>
+          {Object.entries(columns).map(
+            ([name, value]) =>
+              value && (
+                <TableCell key={name}>
+                  <code>{name}</code>
+                </TableCell>
+              ),
+          )}
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map(({ id, player, rank, score }) => (
-          <TableRow key={id}>
-            <TableCell>{rank}</TableCell>
-            <TableCell>{player}</TableCell>
-            <TableCell>{score}</TableCell>
+        {rows.map((row) => (
+          <TableRow key={row.id}>
+            {Object.entries(columns).map(
+              ([name, value]) =>
+                value && <TableCell key={name}>{row[name]}</TableCell>,
+            )}
           </TableRow>
         ))}
       </TableBody>
