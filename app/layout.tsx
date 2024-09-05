@@ -14,7 +14,7 @@ import { Header } from '~/components/Header';
 
 export const metadata: Metadata = {
   description: 'A bridge with EventLink',
-  title: 'VntLnk',
+  title: 'Vntlnk',
 };
 
 export const viewport: Viewport = {
@@ -42,7 +42,7 @@ export default function Layout({ children }: PropsWithChildren) {
           >
             <Toolbar role="presentation" />
             {children}
-            <Footer sx={{ pt: 2, textAlign: 'center' }} />
+            <Footer sx={{ mt: 'auto', pt: 2, textAlign: 'center' }} />
           </Container>
         </Box>
       </Box>
