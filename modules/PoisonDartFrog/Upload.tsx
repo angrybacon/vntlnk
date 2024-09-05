@@ -1,6 +1,8 @@
-import { type ChangeEvent } from 'react';
-import { alpha, Box, Button, type SxProps } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { alpha, Box, type SxProps } from '@mui/material';
+import { useState, type ChangeEvent } from 'react';
 
+import { type Line } from '~/modules/PoisonDartFrog/models';
 import { read } from '~/modules/PoisonDartFrog/read';
 
 type Props = {
@@ -9,13 +11,21 @@ type Props = {
 };
 
 export const Upload = ({ onRead, sx }: Props) => {
+  const [busy, setBusy] = useState(false);
+
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const [file] = event.target.files || [];
-    if (!file) {
-      // TODO Handle more gracefully
-      throw new Error('No file found');
+    if (!busy) {
+      setBusy(true);
+      const [file] = event.target.files || [];
+      if (!file) {
+        // TODO Handle more gracefully
+        throw new Error('No file found');
+      }
+      read(file).then(({ confidence, lines }) => {
+        onRead({ confidence, lines });
+        setBusy(false);
+      });
     }
-    read(file).then(({ confidence, lines }) => onRead({ confidence, lines }));
   };
 
   return (
@@ -35,12 +45,18 @@ export const Upload = ({ onRead, sx }: Props) => {
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
-      <Button
+      <LoadingButton
         component="label"
+        loading={busy}
         size="large"
-        sx={{
-          gridArea: 'input',
-          input: {
+        variant="outlined"
+      >
+        Upload file
+        <Box
+          accept="application/pdf"
+          component="input"
+          onChange={onUpload}
+          sx={{
             bottom: 0,
             clip: 'rect(0 0 0 0)',
             clipPath: 'inset(50%)',
@@ -50,13 +66,10 @@ export const Upload = ({ onRead, sx }: Props) => {
             position: 'absolute',
             whiteSpace: 'nowrap',
             width: 1,
-          },
-        }}
-        variant="outlined"
-      >
-        Upload file
-        <input accept="application/pdf" onChange={onUpload} type="file" />
-      </Button>
+          }}
+          type="file"
+        />
+      </LoadingButton>
     </Box>
   );
 };
