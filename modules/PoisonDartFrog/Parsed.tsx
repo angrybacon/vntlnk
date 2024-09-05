@@ -1,9 +1,20 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import { Box, Chip, Stack, TextField, Tooltip } from '@mui/material';
+import RestoreIcon from '@mui/icons-material/Restore';
+import {
+  Box,
+  Chip,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  Tooltip,
+  type SxProps,
+} from '@mui/material';
 import { Fragment } from 'react';
 
 import { Paper } from '~/components/Paper';
+import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 
 const NEGATIVE = '#B3589A80';
@@ -24,6 +35,7 @@ type Props = {
   pattern: RegExp | undefined;
   patternError: string | undefined;
   query: string;
+  sx: SxProps;
 };
 
 export const Parsed = ({
@@ -33,14 +45,18 @@ export const Parsed = ({
   pattern,
   patternError,
   query,
+  sx,
 }: Props) => {
   const errorIcon = <ErrorIcon color="error" />;
   const successIcon = <CheckCircleIcon />;
   const matches = pattern
     ? lines.filter((line) => line.text.match(pattern))
     : [];
+
+  const onReset = () => onQuery(QUERY_PATTERN);
+
   return (
-    <Paper>
+    <Paper sx={sx}>
       <TextField
         error={!!patternError}
         fullWidth
@@ -51,13 +67,26 @@ export const Parsed = ({
         label="Filter parsed lines"
         // TODO Allow filter reset
         onChange={({ target }) => onQuery(target.value)}
+        slotProps={{
+          input: {
+            endAdornment: query !== QUERY_PATTERN && (
+              <InputAdornment position="end">
+                <Tooltip title="Restore default value">
+                  <IconButton onClick={onReset}>
+                    <RestoreIcon />
+                  </IconButton>
+                </Tooltip>
+              </InputAdornment>
+            ),
+          },
+        }}
         sx={{ input: { fontFamily: 'monospace' } }}
         value={query}
       />
       <Stack direction="row" spacing={1}>
         <Chip
           icon={confidence ? successIcon : errorIcon}
-          label={`Confidence ${confidence}%`}
+          label={`Total confidence ${confidence}%`}
           variant="outlined"
         />
         <Chip

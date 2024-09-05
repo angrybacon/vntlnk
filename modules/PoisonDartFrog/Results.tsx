@@ -1,4 +1,8 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
+  Box,
+  Button,
+  ButtonGroup,
   Paper,
   Table,
   TableBody,
@@ -21,7 +25,25 @@ type Props = {
 
 export const Results = ({ columns, onFilter, rows, sx }: Props) => (
   <Paper sx={sx}>
-    <Filters columns={columns} onFilter={onFilter} sx={{ p: 2 }} />
+    <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
+      <ButtonGroup disabled sx={{ mb: 2, ml: 'auto' }} variant="outlined">
+        <Button
+          aria-label="Copy all"
+          size="small"
+          startIcon={<ContentCopyIcon />}
+        >
+          Copy all
+        </Button>
+        <Button
+          aria-label="Copy visible"
+          size="small"
+          startIcon={<ContentCopyIcon />}
+        >
+          Copy visible
+        </Button>
+      </ButtonGroup>
+      <Filters columns={columns} onFilter={onFilter} />
+    </Box>
     <TableContainer>
       <Table size="small">
         <TableHead>

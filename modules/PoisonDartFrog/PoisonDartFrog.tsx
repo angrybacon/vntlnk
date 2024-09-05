@@ -75,14 +75,11 @@ export const PoisonDartFrog = () => {
     setLines(context.lines.filter(({ text }) => !!text.length));
   };
 
-  // TODO Allow resetting the data
-  const onReset = () => {};
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2 }}>
       <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
       {lines && (
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           <Parsed
             confidence={confidence}
             lines={lines}
@@ -90,12 +87,13 @@ export const PoisonDartFrog = () => {
             pattern={pattern}
             patternError={patternError}
             query={query}
+            sx={{ flexBasis: 0, flexGrow: 1 }}
           />
           <Results
             columns={columns}
             onFilter={onFilter}
             rows={rows}
-            sx={{ flexGrow: 1 }}
+            sx={{ flexBasis: 0, flexGrow: 1, minWidth: 420 }}
           />
         </Box>
       )}
