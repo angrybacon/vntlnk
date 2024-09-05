@@ -6,42 +6,49 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  type SxProps,
 } from '@mui/material';
-import { type SystemStyleObject } from '@mui/system';
 
 import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
+import { Filters } from '~/modules/PoisonDartFrog/Filters';
 
 type Props = {
   columns: typeof COLUMNS;
-  rows: ({ id: number } & { [key in keyof typeof COLUMNS]: string })[];
-  sx: SystemStyleObject;
+  onFilter(index: number, value: boolean): void;
+  rows: [id: number, data: string[]][];
+  sx: SxProps;
 };
 
-export const Results = ({ columns, rows, sx }: Props) => (
-  <TableContainer component={Paper} sx={sx}>
-    <Table size="small">
-      <TableHead>
-        <TableRow>
-          {Object.entries(columns).map(
-            ([name, value]) =>
-              value && (
-                <TableCell key={name}>
-                  <code>{name}</code>
-                </TableCell>
-              ),
-          )}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((row) => (
-          <TableRow key={row.id}>
-            {Object.entries(columns).map(
-              ([name, value]) =>
-                value && <TableCell key={name}>{row[name]}</TableCell>,
+export const Results = ({ columns, onFilter, rows, sx }: Props) => (
+  <Paper sx={sx}>
+    <Filters columns={columns} onFilter={onFilter} sx={{ p: 2 }} />
+    <TableContainer>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            {columns.map(
+              ([id, should]) =>
+                should && (
+                  <TableCell key={id}>
+                    <code>{id}</code>
+                  </TableCell>
+                ),
             )}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </TableContainer>
+        </TableHead>
+        <TableBody>
+          {rows.map(([id, data]) => (
+            <TableRow key={id}>
+              {data.map(
+                (value, index) =>
+                  columns[index]?.[1] && (
+                    <TableCell key={columns[index]?.[0]}>{value}</TableCell>
+                  ),
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Paper>
 );

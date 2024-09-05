@@ -33,13 +33,16 @@ export default function Layout({ children }: PropsWithChildren) {
             component="main"
             maxWidth="xl"
             sx={{
-              // backgroundColor: 'background.default',
-              py: { xs: 2, sm: 3 },
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: '100vh',
+              pb: 2,
+              pt: { xs: 2, sm: 3 },
             }}
           >
             <Toolbar role="presentation" />
             {children}
-            <Footer sx={{ textAlign: 'center' }} />
+            <Footer sx={{ pt: 2, textAlign: 'center' }} />
           </Container>
         </Box>
       </Box>

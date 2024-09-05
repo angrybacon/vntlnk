@@ -1,50 +1,47 @@
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   FormGroup,
-  TextField,
+  Typography,
+  type SxProps,
 } from '@mui/material';
-import { type SystemStyleObject } from '@mui/system';
 import { type ChangeEvent } from 'react';
 
-import { Paper } from '~/components/Paper';
-import { COLUMNS } from '~/modules/PoisonDartFrog/constants';
+import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
 
 type Props = {
-  onFilter(name: string, value: boolean): void;
-  onQuery(query: string): void;
-  columns: Record<string, boolean>;
-  query: string;
-  sx: SystemStyleObject;
+  onFilter(index: number, value: boolean): void;
+  columns: typeof COLUMNS;
+  sx: SxProps;
 };
 
-export const Filters = ({ columns, onFilter, onQuery, query, sx }: Props) => {
-  const handleFilter = ({ target }: ChangeEvent<HTMLInputElement>) =>
-    onFilter(target.name, target.checked);
+export const Filters = ({ columns, onFilter, sx }: Props) => {
+  const handleFilter =
+    (index: number) => (event: ChangeEvent<HTMLInputElement>) =>
+      onFilter(index, event.target.checked);
 
   return (
-    <Paper sx={sx}>
-      <TextField
-        fullWidth
-        // TODO Allow filter reset
-        label="Filter parsed lines"
-        onChange={({ target }) => onQuery(target.value)}
-        sx={{ input: { fontFamily: 'monospace' } }}
-        value={query}
-      />
+    <Box sx={sx}>
+      <Typography>
+        Found {columns.length} columns in the filtered lines.{' '}
+        {columns.length > 0 ? (
+          <>Use the checkboxes to show more columns.</>
+        ) : (
+          <>Adjust your query to find result rows withint the parsed content.</>
+        )}
+      </Typography>
       <FormGroup row sx={{ gap: 1 }}>
-        {Object.keys(COLUMNS).map((column) => (
+        {columns.map(([id, should], index) => (
           <FormControlLabel
             control={
-              <Checkbox checked={columns[column]} onChange={handleFilter} />
+              <Checkbox checked={should} onChange={handleFilter(index)} />
             }
-            key={column}
-            label={<code>{column}</code>}
-            name={column}
-            sx={{ userSelect: 'none' }}
+            key={id}
+            label={<code>{id}</code>}
           />
         ))}
       </FormGroup>
-    </Paper>
+    </Box>
   );
 };

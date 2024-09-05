@@ -1,58 +1,76 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { COLUMNS, QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
-import { Filters } from '~/modules/PoisonDartFrog/Filters';
+import { type Line } from '~/modules/PoisonDartFrog/models';
 import { Parsed } from '~/modules/PoisonDartFrog/Parsed';
 import { Results } from '~/modules/PoisonDartFrog/Results';
 import { Upload } from '~/modules/PoisonDartFrog/Upload';
 
-import MOCKS from './mocks.json';
-
-// TODO Find the actual statistic names
-type Row = {
-  id: number;
-  mga: string;
-  pg: string;
-  pga: string;
-  player: string;
-  rank: string;
-  score: string;
-};
+type Row = [id: number, data: string[]];
 
 export const PoisonDartFrog = () => {
-  const [columns, setColumns] = useState({ ...COLUMNS });
-  const [confidence, setConfidence] = useState<number>();
-  const [lines, setLines] = useState<{ id: number; text: string }[]>(MOCKS);
+  const [columns, setColumns] = useState<typeof COLUMNS>([]);
+  const [confidence, setConfidence] = useState(0);
+  const [lines, setLines] = useState<Line[]>();
   const [query, setQuery] = useState(QUERY_PATTERN);
+  const [pattern, setPattern] = useState<RegExp>();
+  const [patternError, setPatternError] = useState<string>();
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    // TODO Handle filter syntax errors
-    if (lines) {
+    try {
+      setPattern(new RegExp(query));
+      setPatternError(undefined);
+    } catch (error) {
+      setPattern(undefined);
+      setPatternError(error instanceof Error ? error.message : `${error}`);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    if (pattern && lines) {
       const candidates = lines.reduce<Row[]>((accumulator, { text }, index) => {
-        const [, rank, player, score, mga, pg, pga] =
-          text.match(new RegExp(query)) || [];
-        // TODO Dry it up
-        if (mga && pg && pga && player && rank && score) {
+        const [, ...matches] = text.match(pattern) || [];
+        if (matches.length) {
           // TODO How about color-coded confidence for each value?
-          accumulator.push({ id: index, mga, pg, pga, player, rank, score });
+          accumulator.push([index, matches]);
         }
         return accumulator;
       }, []);
       setRows(candidates);
     }
-  }, [query, lines]);
+  }, [lines, pattern]);
 
-  const onFilter = (name: string, value: boolean) =>
-    setColumns({ ...columns, [name]: value });
+  useEffect(() => {
+    if (rows.some((row) => row.length !== rows[0]?.length)) {
+      // TODO Handle more gracefully
+      console.error('Some rows have more cells than others');
+    }
+    if (!rows[0]?.[1].length) {
+      setColumns([]);
+      return;
+    }
+    setColumns(
+      rows[0][1].map((_, index) => [
+        String.fromCharCode(65 + index),
+        COLUMNS[index]?.[1] || false,
+      ]),
+    );
+  }, [rows]);
 
-  const onRead = (context: {
-    confidence: number;
-    lines: { id: number; text: string }[];
-  }) => {
+  const onFilter = (index: number, value: boolean) =>
+    setColumns((previous) => {
+      const next = [...previous];
+      if (next[index] !== undefined) {
+        next[index][1] = value;
+      }
+      return next;
+    });
+
+  const onRead = (context: { confidence: number; lines: Line[] }) => {
     setConfidence(context.confidence);
     setLines(context.lines.filter(({ text }) => !!text.length));
   };
@@ -61,40 +79,25 @@ export const PoisonDartFrog = () => {
   const onReset = () => {};
 
   return (
-    <Box
-      sx={{
-        // FIXME Doesn't stack cells towards the top
-        alignItems: 'start',
-        display: 'grid',
-        gap: 3,
-        gridTemplateAreas: "'upload upload' 'filters parsed' 'results parsed'",
-      }}
-    >
-      <Upload onRead={onRead} sx={{ gridArea: 'upload' }} />
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2 }}>
+      <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
       {lines && (
-        <>
-          <Filters
-            onFilter={onFilter}
-            onQuery={setQuery}
-            columns={columns}
-            query={query}
-            sx={{ gridArea: 'filters' }}
-          />
-          <Results columns={columns} rows={rows} sx={{ gridArea: 'results' }} />
+        <Box sx={{ display: 'flex', gap: 2 }}>
           <Parsed
             confidence={confidence}
             lines={lines}
-            sx={{ gridArea: 'parsed' }}
+            onQuery={setQuery}
+            pattern={pattern}
+            patternError={patternError}
+            query={query}
           />
-        </>
-      )}
-      {!lines && (
-        <Typography
-          paragraph
-          sx={{ color: 'text.secondary', fontStyle: 'italic' }}
-        >
-          Once you've uploaded a document you'll see extracted rows.
-        </Typography>
+          <Results
+            columns={columns}
+            onFilter={onFilter}
+            rows={rows}
+            sx={{ flexGrow: 1 }}
+          />
+        </Box>
       )}
     </Box>
   );

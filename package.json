@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">=20.12.2"
+    "node": ">=22.7.0"
   },
   "name": "vntlnk",
   "private": true,
@@ -17,9 +17,11 @@
   "dependencies": {
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
-    "@mui/material": "5.16.7",
+    "@mui/icons-material": "6.0.2",
+    "@mui/lab": "6.0.0-beta.9",
+    "@mui/material": "6.0.2",
     "next": "14.2.5",
-    "pdfjs-dist": "4.5.136",
+    "pdfjs-dist": "4.6.82",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "tesseract.js": "5.1.1"
@@ -27,12 +29,11 @@
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.3.1",
     "@korumite/ts": "1.1.0",
-    "@mui/system": "5.16.7",
     "@types/react": "18.3.4",
     "@types/react-dom": "18.3.0",
     "knip": "5.27.3",
     "prettier": "3.3.3",
     "sass": "1.77.8",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   }
 }

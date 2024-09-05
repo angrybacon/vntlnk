@@ -1,15 +1,11 @@
-import { alpha, Box, Button } from '@mui/material';
-import { type SystemStyleObject } from '@mui/system';
 import { type ChangeEvent } from 'react';
+import { alpha, Box, Button, type SxProps } from '@mui/material';
 
 import { read } from '~/modules/PoisonDartFrog/read';
 
 type Props = {
-  onRead(context: {
-    confidence: number;
-    lines: { id: number; text: string }[];
-  }): void;
-  sx: SystemStyleObject;
+  onRead(context: { confidence: number; lines: Line[] }): void;
+  sx: SxProps;
 };
 
 export const Upload = ({ onRead, sx }: Props) => {
@@ -36,7 +32,7 @@ export const Upload = ({ onRead, sx }: Props) => {
           height: 100,
           justifyContent: 'center',
         }),
-        sx,
+        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       <Button

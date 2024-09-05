@@ -7,13 +7,17 @@ import {
 } from 'pdfjs-dist';
 import { createWorker } from 'tesseract.js';
 
+import { type Line } from '~/modules/PoisonDartFrog/models';
+
 // TODO Handle invalid URLs
 GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url,
 ).toString();
 
-const scan = async (page: PDFPageProxy) => {
+const scan = async (
+  page: PDFPageProxy,
+): Promise<{ confidence: number; lines: Line[] }> => {
   const viewport = page.getViewport({ scale: 1 });
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
@@ -35,10 +39,16 @@ const scan = async (page: PDFPageProxy) => {
   await worker.terminate();
   console.info('Successfully killed the worker');
   return {
-    confidence: data.confidence,
+    confidence: Math.round(data.confidence * 100) / 100,
     lines: data.lines.map((line, index) => ({
+      confidence: Math.round(line.confidence * 100) / 100,
       id: index,
       text: line.text.replaceAll('\n', ''),
+      words: line.words.map((word, index) => ({
+        confidence: Math.round(word.confidence * 100) / 100,
+        id: index,
+        text: word.text,
+      })),
     })),
   };
 };
@@ -51,14 +61,19 @@ export const read = async (file: File) => {
   const meta = await pdf.getMetadata();
   const text = await page.getTextContent();
   let confidence = 0;
-  let lines = [];
+  let lines: Line[] = [];
   if (text.items.length) {
     console.info(`Found ${text.items.length} text nodes`);
     confidence = 100;
-    lines = text.items.map((item, index) => ({
-      id: index,
-      text: 'str' in item ? item.str.trim() : '',
-    }));
+    lines = text.items.map((item, index) => {
+      const text = 'str' in item ? item.str.trim() : '';
+      return {
+        confidence: 100,
+        id: index,
+        text,
+        words: [{ confidence: 100, id: 0, text }],
+      };
+    });
   } else {
     console.info('Found no text nodes, spawning a dummy canvas...');
     ({ confidence, lines } = await scan(page));

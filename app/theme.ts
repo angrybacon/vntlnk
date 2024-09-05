@@ -23,11 +23,6 @@ export const theme = createTheme({
         rounded: { borderRadius: 16 },
       },
     },
-    MuiTableRow: {
-      styleOverrides: {
-        root: { '&:last-child td': { border: 0 } },
-      },
-    },
   },
   palette: { background: { default: grey[50] }, mode: 'light' },
   typography: {
