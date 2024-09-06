@@ -53,7 +53,7 @@ const scan = async (
   };
 };
 
-export const read = async (file: File) => {
+export const read = async (file: File, logger: (text: string) => void) => {
   const pdf = await getDocument(URL.createObjectURL(file)).promise;
   // TODO Handle multiple pages
   const page = await pdf.getPage(1);
@@ -63,7 +63,7 @@ export const read = async (file: File) => {
   let confidence = 0;
   let lines: Line[] = [];
   if (text.items.length) {
-    console.info(`Found ${text.items.length} text nodes`);
+    logger(`Found ${text.items.length} text nodes`);
     confidence = 100;
     lines = text.items.map((item, index) => {
       const text = 'str' in item ? item.str.trim() : '';
@@ -75,8 +75,9 @@ export const read = async (file: File) => {
       };
     });
   } else {
-    console.info('Found no text nodes, spawning a dummy canvas...');
+    logger('Found no text nodes, spawning an OCR worker...');
     ({ confidence, lines } = await scan(page));
+    logger(`Scanned ${lines.length} lines with ${confidence}% confidence`);
   }
   return {
     confidence,

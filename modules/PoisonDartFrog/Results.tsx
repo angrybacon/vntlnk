@@ -11,6 +11,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import { useNotifications } from '@toolpad/core';
 
 import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
 import { Filters } from '~/modules/PoisonDartFrog/Filters';
@@ -22,6 +23,8 @@ type Props = {
 };
 
 export const Results = ({ columns, onFilter, rows }: Props) => {
+  const { show } = useNotifications();
+
   const table = rows.map(([id, data]) => ({
     cells: data.map((value, index) => ({
       id: columns[index]?.[0],
@@ -41,6 +44,7 @@ export const Results = ({ columns, onFilter, rows }: Props) => {
       })
       .join('\n');
     navigator.clipboard.writeText(value);
+    show(`${all ? 'All' : 'Visible'} rows copied to the clipboard`);
   };
 
   return (

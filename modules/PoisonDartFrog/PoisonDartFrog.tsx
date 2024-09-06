@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Grid2 as Grid } from '@mui/material';
+import { NotificationsProvider } from '@toolpad/core';
 import { useEffect, useState } from 'react';
 
 import { COLUMNS, QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
@@ -77,24 +78,26 @@ export const PoisonDartFrog = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2 }}>
-      <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
-      {lines && (
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 'grow' }}>
-            <Parsed
-              confidence={confidence}
-              lines={lines}
-              onQuery={setQuery}
-              pattern={pattern}
-              patternError={patternError}
-              query={query}
-            />
+      <NotificationsProvider>
+        <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
+        {lines && (
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 'grow' }}>
+              <Parsed
+                confidence={confidence}
+                lines={lines}
+                onQuery={setQuery}
+                pattern={pattern}
+                patternError={patternError}
+                query={query}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 'grow' }}>
+              <Results columns={columns} onFilter={onFilter} rows={rows} />
+            </Grid>
           </Grid>
-          <Grid size={{ xs: 12, sm: 'grow' }}>
-            <Results columns={columns} onFilter={onFilter} rows={rows} />
-          </Grid>
-        </Grid>
-      )}
+        )}
+      </NotificationsProvider>
     </Box>
   );
 };

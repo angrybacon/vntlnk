@@ -23,6 +23,9 @@ export const theme = createTheme({
         rounded: { borderRadius: 16 },
       },
     },
+    MuiSnackbar: {
+      defaultProps: { autoHideDuration: 4000 },
+    },
     MuiTooltip: {
       defaultProps: { placement: 'top' },
     },

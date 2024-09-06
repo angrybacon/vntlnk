@@ -1,5 +1,6 @@
 import { LoadingButton } from '@mui/lab';
 import { alpha, Box, type SxProps } from '@mui/material';
+import { useNotifications } from '@toolpad/core';
 import { useState, type ChangeEvent, type DragEvent } from 'react';
 
 import { type Line } from '~/modules/PoisonDartFrog/models';
@@ -13,12 +14,17 @@ type Props = {
 };
 
 export const Upload = ({ onRead, sx }: Props) => {
+  const { show } = useNotifications();
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<'ok' | 'ko' | null>(null);
 
   const handleUpload = (file: File | null | undefined) => {
+    if (!file) {
+      show('Something went real bad. Somehow I lost your file');
+      return;
+    }
     setBusy(true);
-    read(file).then(({ confidence, lines }) => {
+    read(file, show).then(({ confidence, lines }) => {
       onRead({ confidence, lines });
       setBusy(false);
     });
@@ -28,6 +34,10 @@ export const Upload = ({ onRead, sx }: Props) => {
     const [first] = [...event.dataTransfer.items];
     const value = first?.kind === 'file' && first.type === ACCEPT ? 'ok' : 'ko';
     setStatus(value);
+    if (value === 'ko') {
+      show('File type not supported, expected a PDF');
+    }
+  };
 
   const onDragLeave = () => setStatus(null);
 
@@ -52,10 +62,6 @@ export const Upload = ({ onRead, sx }: Props) => {
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (!busy) {
       const [file] = event.target.files || [];
-      if (!file) {
-        // TODO Handle more gracefully
-        throw new Error('No file found');
-      }
       handleUpload(file);
     }
   };
