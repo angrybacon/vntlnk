@@ -6,7 +6,6 @@ import {
   Chip,
   IconButton,
   InputAdornment,
-  Stack,
   TextField,
   Tooltip,
   type SxProps,
@@ -35,7 +34,6 @@ type Props = {
   pattern: RegExp | undefined;
   patternError: string | undefined;
   query: string;
-  sx: SxProps;
 };
 
 export const Parsed = ({
@@ -45,7 +43,6 @@ export const Parsed = ({
   pattern,
   patternError,
   query,
-  sx,
 }: Props) => {
   const errorIcon = <ErrorIcon color="error" />;
   const successIcon = <CheckCircleIcon />;
@@ -56,7 +53,7 @@ export const Parsed = ({
   const onReset = () => onQuery(QUERY_PATTERN);
 
   return (
-    <Paper sx={sx}>
+    <Paper>
       <TextField
         error={!!patternError}
         fullWidth
@@ -83,23 +80,26 @@ export const Parsed = ({
         sx={{ input: { fontFamily: 'monospace' } }}
         value={query}
       />
-      <Stack direction="row" spacing={1}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         <Chip
           icon={confidence ? successIcon : errorIcon}
           label={`Total confidence ${confidence}%`}
+          size="small"
           variant="outlined"
         />
         <Chip
           icon={matches.length ? successIcon : errorIcon}
           label={`Matched ${matches.length} lines`}
+          size="small"
           variant="outlined"
         />
         <Chip
           icon={pattern ? successIcon : errorIcon}
           label={`${pattern ? 'Valid' : 'Invalid'} pattern`}
+          size="small"
           variant="outlined"
         />
-      </Stack>
+      </Box>
       <Box
         component="pre"
         sx={{
@@ -108,6 +108,7 @@ export const Parsed = ({
           fontSize: 'body2.fontSize',
           gap: 0.5,
           gridTemplateColumns: 'auto 1fr',
+          overflowX: 'auto',
         }}
       >
         {lines.map((line) => (

@@ -10,7 +10,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  type SxProps,
 } from '@mui/material';
 
 import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
@@ -20,57 +19,53 @@ type Props = {
   columns: typeof COLUMNS;
   onFilter(index: number, value: boolean): void;
   rows: [id: number, data: string[]][];
-  sx: SxProps;
 };
 
-export const Results = ({ columns, onFilter, rows, sx }: Props) => (
-  <Paper sx={sx}>
-    <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
-      <ButtonGroup disabled sx={{ mb: 2, ml: 'auto' }} variant="outlined">
-        <Button
-          aria-label="Copy all"
-          size="small"
-          startIcon={<ContentCopyIcon />}
-        >
-          Copy all
-        </Button>
-        <Button
-          aria-label="Copy visible"
-          size="small"
-          startIcon={<ContentCopyIcon />}
-        >
-          Copy visible
-        </Button>
-      </ButtonGroup>
-      <Filters columns={columns} onFilter={onFilter} />
-    </Box>
-    <TableContainer>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            {columns.map(
-              ([id, should]) =>
-                should && (
-                  <TableCell key={id}>
-                    <code>{id}</code>
-                  </TableCell>
-                ),
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map(([id, data]) => (
-            <TableRow key={id}>
-              {data.map(
-                (value, index) =>
-                  columns[index]?.[1] && (
-                    <TableCell key={columns[index]?.[0]}>{value}</TableCell>
+export const Results = ({ columns, onFilter, rows }: Props) => {
+  const table = rows.map(([id, data]) => ({
+    cells: data.map((value, index) => ({
+      id: columns[index]?.[0],
+      value,
+      visible: columns[index]?.[1],
+    })),
+    id,
+  }));
+
+  return (
+    <Paper>
+      <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
+        <ButtonGroup size="small" sx={{ mb: 2, ml: 'auto' }} variant="outlined">
+          <Button startIcon={<ContentCopyIcon />}>Copy all</Button>
+          <Button startIcon={<ContentCopyIcon />}>Copy visible</Button>
+        </ButtonGroup>
+        <Filters columns={columns} onFilter={onFilter} />
+      </Box>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              {columns.map(
+                ([id, should]) =>
+                  should && (
+                    <TableCell key={id}>
+                      <code>{id}</code>
+                    </TableCell>
                   ),
               )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Paper>
-);
+          </TableHead>
+          <TableBody>
+            {table.map(({ cells, id }) => (
+              <TableRow key={id} sx={{ '&:last-child td': { border: 0 } }}>
+                {cells.map(
+                  ({ id, value, visible }) =>
+                    visible && <TableCell key={id}>{value}</TableCell>,
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
+  );
+};

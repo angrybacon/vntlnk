@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, Grid2 as Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { COLUMNS, QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
@@ -79,23 +79,21 @@ export const PoisonDartFrog = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2 }}>
       <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
       {lines && (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-          <Parsed
-            confidence={confidence}
-            lines={lines}
-            onQuery={setQuery}
-            pattern={pattern}
-            patternError={patternError}
-            query={query}
-            sx={{ flexBasis: 0, flexGrow: 1 }}
-          />
-          <Results
-            columns={columns}
-            onFilter={onFilter}
-            rows={rows}
-            sx={{ flexBasis: 0, flexGrow: 1, minWidth: 420 }}
-          />
-        </Box>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 'grow' }}>
+            <Parsed
+              confidence={confidence}
+              lines={lines}
+              onQuery={setQuery}
+              pattern={pattern}
+              patternError={patternError}
+              query={query}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 'grow' }}>
+            <Results columns={columns} onFilter={onFilter} rows={rows} />
+          </Grid>
+        </Grid>
       )}
     </Box>
   );

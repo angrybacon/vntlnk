@@ -11,6 +11,6 @@ type Props = PaperProps & {
 export const Paper = ({ sx, ...rest }: Props) => (
   <MuiPaper
     {...rest}
-    sx={[{ display: 'grid', gap: 2, p: 3 }, ...(Array.isArray(sx) ? sx : [sx])]}
+    sx={[{ display: 'grid', gap: 2, p: 2 }, ...(Array.isArray(sx) ? sx : [sx])]}
   />
 );

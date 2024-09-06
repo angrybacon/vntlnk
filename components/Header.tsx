@@ -7,7 +7,7 @@ export const Header = () => {
   return (
     <Slide appear={false} in={!trigger}>
       <AppBar elevation={1}>
-        <Toolbar></Toolbar>
+        <Toolbar />
       </AppBar>
     </Slide>
   );
