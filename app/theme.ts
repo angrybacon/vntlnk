@@ -23,6 +23,9 @@ export const theme = createTheme({
         rounded: { borderRadius: 16 },
       },
     },
+    MuiTooltip: {
+      defaultProps: { placement: 'top' },
+    },
   },
   palette: { background: { default: grey[50] }, mode: 'light' },
   typography: {

@@ -126,6 +126,7 @@ export const Parsed = ({
             <Box sx={{ display: 'flex', gap: 0.5 }}>
               {line.words.map((word) => (
                 <Tooltip
+                  enterTouchDelay={0}
                   followCursor
                   key={word.id}
                   title={`Confidence: ${word.confidence}%`}
