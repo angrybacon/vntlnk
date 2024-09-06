@@ -3,14 +3,17 @@
 import {
   getDocument,
   GlobalWorkerOptions,
+  version,
   type PDFPageProxy,
+  // NOTE Use legacy build until Node 22
 } from 'pdfjs-dist/legacy/build/pdf';
 import { createWorker } from 'tesseract.js';
 
 import { type Line } from '~/modules/PoisonDartFrog/models';
 
-const url = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url);
-GlobalWorkerOptions.workerSrc = url.toString();
+// NOTE Until I figure out how to make Next transpile the dependency directly,
+//      we're stuck with Unpkg.
+GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
 
 const scan = async (
   page: PDFPageProxy,
