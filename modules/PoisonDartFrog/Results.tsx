@@ -31,12 +31,28 @@ export const Results = ({ columns, onFilter, rows }: Props) => {
     id,
   }));
 
+  const handleCopy = (all?: true) => () => {
+    const value = table
+      .map((row) => {
+        const cells = all
+          ? row.cells
+          : row.cells.filter(({ visible }) => visible);
+        return cells.map(({ value }) => value).join('\t');
+      })
+      .join('\n');
+    navigator.clipboard.writeText(value);
+  };
+
   return (
     <Paper>
       <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
         <ButtonGroup size="small" sx={{ mb: 2, ml: 'auto' }} variant="outlined">
-          <Button startIcon={<ContentCopyIcon />}>Copy all</Button>
-          <Button startIcon={<ContentCopyIcon />}>Copy visible</Button>
+          <Button onClick={handleCopy(true)} startIcon={<ContentCopyIcon />}>
+            Copy all
+          </Button>
+          <Button onClick={handleCopy()} startIcon={<ContentCopyIcon />}>
+            Copy visible
+          </Button>
         </ButtonGroup>
         <Filters columns={columns} onFilter={onFilter} />
       </Box>
