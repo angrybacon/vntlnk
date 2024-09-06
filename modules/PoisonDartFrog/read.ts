@@ -4,16 +4,13 @@ import {
   getDocument,
   GlobalWorkerOptions,
   type PDFPageProxy,
-} from 'pdfjs-dist';
+} from 'pdfjs-dist/legacy/build/pdf';
 import { createWorker } from 'tesseract.js';
 
 import { type Line } from '~/modules/PoisonDartFrog/models';
 
-// TODO Handle invalid URLs
-GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString();
+const url = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url);
+GlobalWorkerOptions.workerSrc = url.toString();
 
 const scan = async (
   page: PDFPageProxy,
