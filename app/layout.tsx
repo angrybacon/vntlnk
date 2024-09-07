@@ -35,7 +35,7 @@ export default function Layout({ children }: PropsWithChildren) {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              minHeight: '100vh',
+              minHeight: '100%',
               pb: 2,
               pt: { xs: 2, sm: 3 },
             }}

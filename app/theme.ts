@@ -14,6 +14,7 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        'body, html': { height: '100%' },
         pre: { margin: 0 },
       },
     },
