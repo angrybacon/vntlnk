@@ -31,12 +31,8 @@ export const Upload = ({ onRead, sx }: Props) => {
   };
 
   const onDragEnter = (event: DragEvent<HTMLDivElement>) => {
-    const [first] = [...event.dataTransfer.items];
-    const value = first?.kind === 'file' && first.type === ACCEPT ? 'ok' : 'ko';
-    setStatus(value);
-    if (value === 'ko') {
-      show('File type not supported, expected a PDF');
-    }
+    const [file] = [...event.dataTransfer.items];
+    validate(file);
   };
 
   const onDragLeave = () => setStatus(null);
@@ -51,10 +47,7 @@ export const Upload = ({ onRead, sx }: Props) => {
     event.preventDefault();
     if (status === 'ok') {
       const [first] = [...event.dataTransfer.items];
-      if (first?.kind === 'file') {
-        const file = first.getAsFile();
-        handleUpload(file);
-      }
+      handleUpload(first?.getAsFile());
     }
     setStatus(null);
   };
@@ -62,8 +55,20 @@ export const Upload = ({ onRead, sx }: Props) => {
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (!busy) {
       const [file] = event.target.files || [];
-      handleUpload(file);
+      if (validate(file)) {
+        handleUpload(file);
+      }
     }
+    setStatus(null);
+  };
+
+  const validate = (file: { kind?: string; type: string } | undefined) => {
+    const value = file?.type === ACCEPT ? 'ok' : 'ko';
+    setStatus(value);
+    if (value === 'ko') {
+      show('File type not supported, expected a PDF');
+    }
+    return value === 'ok';
   };
 
   return (
