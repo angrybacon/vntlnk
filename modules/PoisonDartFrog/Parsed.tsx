@@ -62,7 +62,6 @@ export const Parsed = ({
           'Use capture groups in order to filter lines and target specific columns'
         }
         label="Filter parsed lines"
-        // TODO Allow filter reset
         onChange={({ target }) => onQuery(target.value)}
         slotProps={{
           input: {
@@ -149,6 +148,7 @@ export const Parsed = ({
                     <Box
                       sx={{
                         px: 0.25,
+                        userSelect: 'none',
                         '&:hover': { backgroundColor: 'action.hover' },
                       }}
                     >
