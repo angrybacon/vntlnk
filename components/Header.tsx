@@ -10,6 +10,10 @@ import {
 } from '@mui/material';
 import NextLink from 'next/link';
 
+const LINKS: [path: string, label: string][] = [
+  ['/poisondartfrog', 'Poison Dart Frog'],
+] as const;
+
 export const Header = () => {
   const trigger = useScrollTrigger();
   return (
@@ -26,9 +30,16 @@ export const Header = () => {
             Vntlnk
           </Button>
           <Box component="nav" sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
-            <Button color="inherit" component={NextLink} href="/poisondartfrog">
-              PoisonDartFrog
-            </Button>
+            {LINKS.map(([path, label]) => (
+              <Button
+                color="inherit"
+                component={NextLink}
+                href={path}
+                key={path}
+              >
+                {label}
+              </Button>
+            ))}
           </Box>
         </Toolbar>
       </AppBar>

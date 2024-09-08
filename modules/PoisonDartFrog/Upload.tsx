@@ -9,7 +9,7 @@ import { read } from '~/modules/PoisonDartFrog/read';
 const ACCEPT = 'application/pdf';
 
 type Props = {
-  onRead(context: { confidence: number; lines: Line[] }): void;
+  onRead(context: { confidence: number; lines: Line[]; url: string }): void;
   sx: SxProps;
 };
 
@@ -25,7 +25,7 @@ export const Upload = ({ onRead, sx }: Props) => {
     }
     setBusy(true);
     read(file, show).then(({ confidence, lines }) => {
-      onRead({ confidence, lines });
+      onRead({ confidence, lines, url: URL.createObjectURL(file) });
       setBusy(false);
     });
   };

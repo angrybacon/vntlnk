@@ -14,7 +14,7 @@ export default function Page() {
       </Typography>
       <Typography gutterBottom>
         <em>Vntlnk</em> is not endorsed nor supported by{' '}
-        <em>Wizards of the Coast</em> or any other affiliated origanization.
+        <em>Wizards of the Coast</em> or any other affiliated organizations.
       </Typography>
       <Typography gutterBottom>
         All original code is available under the terms of the{' '}

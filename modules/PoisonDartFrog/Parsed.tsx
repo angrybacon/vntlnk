@@ -8,10 +8,10 @@ import {
   InputAdornment,
   TextField,
   Tooltip,
-  type SxProps,
 } from '@mui/material';
 import { Fragment } from 'react';
 
+import { Link } from '~/components/Link';
 import { Paper } from '~/components/Paper';
 import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
@@ -58,11 +58,17 @@ export const Parsed = ({
         error={!!patternError}
         fullWidth
         helperText={
-          patternError ||
-          'Use capture groups in order to filter lines and target specific columns'
+          patternError || (
+            <>
+              Filter lines and use{' '}
+              <Link href="https://regex101.com">capturing groups</Link> to
+              target columns
+            </>
+          )
         }
         label="Filter parsed lines"
         onChange={({ target }) => onQuery(target.value)}
+        size="small"
         slotProps={{
           input: {
             endAdornment: query !== QUERY_PATTERN && (
@@ -138,6 +144,7 @@ export const Parsed = ({
                         borderRadius: 1,
                         display: 'flex',
                         overflow: 'hidden',
+                        userSelect: 'none',
                       },
                       !!pattern &&
                         line.text.match(pattern) && {
@@ -148,7 +155,6 @@ export const Parsed = ({
                     <Box
                       sx={{
                         px: 0.25,
-                        userSelect: 'none',
                         '&:hover': { backgroundColor: 'action.hover' },
                       }}
                     >

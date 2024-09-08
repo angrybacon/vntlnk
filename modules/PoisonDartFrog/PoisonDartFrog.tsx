@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { COLUMNS, QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 import { Parsed } from '~/modules/PoisonDartFrog/Parsed';
+import { Preview } from '~/modules/PoisonDartFrog/Preview';
 import { Results } from '~/modules/PoisonDartFrog/Results';
 import { Upload } from '~/modules/PoisonDartFrog/Upload';
 
@@ -19,6 +20,8 @@ export const PoisonDartFrog = () => {
   const [query, setQuery] = useState(QUERY_PATTERN);
   const [pattern, setPattern] = useState<RegExp>();
   const [patternError, setPatternError] = useState<string>();
+  const [preview, setPreview] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>();
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
@@ -36,7 +39,6 @@ export const PoisonDartFrog = () => {
       const candidates = lines.reduce<Row[]>((accumulator, { text }, index) => {
         const [, ...matches] = text.match(pattern) || [];
         if (matches.length) {
-          // TODO How about color-coded confidence for each value?
           accumulator.push([index, matches]);
         }
         return accumulator;
@@ -71,9 +73,14 @@ export const PoisonDartFrog = () => {
       return next;
     });
 
-  const onRead = (context: { confidence: number; lines: Line[] }) => {
+  const onRead = (context: {
+    confidence: number;
+    lines: Line[];
+    url: string;
+  }) => {
     setConfidence(context.confidence);
     setLines(context.lines.filter(({ text }) => !!text.length));
+    setPreviewUrl(context.url);
   };
 
   return (
@@ -82,7 +89,7 @@ export const PoisonDartFrog = () => {
         <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
         {lines && (
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 'grow' }}>
+            <Grid size={{ xs: 12, md: 'grow' }}>
               <Parsed
                 confidence={confidence}
                 lines={lines}
@@ -92,12 +99,22 @@ export const PoisonDartFrog = () => {
                 query={query}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 'grow' }}>
-              <Results columns={columns} onFilter={onFilter} rows={rows} />
+            <Grid size={{ xs: 12, md: 'grow' }}>
+              <Results
+                columns={columns}
+                onFilter={onFilter}
+                onPreview={() => setPreview(true)}
+                rows={rows}
+              />
             </Grid>
           </Grid>
         )}
       </NotificationsProvider>
+      <Preview
+        file={previewUrl}
+        onClose={() => setPreview(false)}
+        open={preview}
+      />
     </Box>
   );
 };

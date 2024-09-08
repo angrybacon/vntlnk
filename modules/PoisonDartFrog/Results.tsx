@@ -1,4 +1,5 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {
   Box,
   Button,
@@ -10,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  type SxProps,
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 
@@ -19,10 +21,11 @@ import { Filters } from '~/modules/PoisonDartFrog/Filters';
 type Props = {
   columns: typeof COLUMNS;
   onFilter(index: number, value: boolean): void;
+  onPreview(): void;
   rows: [id: number, data: string[]][];
 };
 
-export const Results = ({ columns, onFilter, rows }: Props) => {
+export const Results = ({ columns, onFilter, onPreview, rows }: Props) => {
   const { show } = useNotifications();
 
   const table = rows.map(([id, data]) => ({
@@ -47,19 +50,35 @@ export const Results = ({ columns, onFilter, rows }: Props) => {
     show(`${all ? 'All' : 'Visible'} rows copied to the clipboard`);
   };
 
+  const iconStyles: SxProps = { display: { xs: 'none', sm: 'block' } };
+
   return (
     <Paper>
-      <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
-        <ButtonGroup size="small" sx={{ mb: 2, ml: 'auto' }} variant="outlined">
-          <Button onClick={handleCopy(true)} startIcon={<ContentCopyIcon />}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
+        <Button
+          onClick={onPreview}
+          size="small"
+          startIcon={<PictureAsPdfIcon sx={iconStyles} />}
+          variant="outlined"
+        >
+          View original
+        </Button>
+        <ButtonGroup size="small" sx={{ ml: 1 }} variant="outlined">
+          <Button
+            onClick={handleCopy(true)}
+            startIcon={<ContentCopyIcon sx={iconStyles} />}
+          >
             Copy all
           </Button>
-          <Button onClick={handleCopy()} startIcon={<ContentCopyIcon />}>
+          <Button
+            onClick={handleCopy()}
+            startIcon={<ContentCopyIcon sx={iconStyles} />}
+          >
             Copy visible
           </Button>
         </ButtonGroup>
-        <Filters columns={columns} onFilter={onFilter} />
       </Box>
+      <Filters columns={columns} onFilter={onFilter} sx={{ px: 2 }} />
       <TableContainer>
         <Table size="small">
           <TableHead>

@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   FormGroup,
   Typography,
+  type SxProps,
 } from '@mui/material';
 import { type ChangeEvent } from 'react';
 
@@ -12,16 +13,16 @@ import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
 type Props = {
   onFilter(index: number, value: boolean): void;
   columns: typeof COLUMNS;
+  sx: SxProps;
 };
 
-export const Filters = ({ columns, onFilter }: Props) => {
-  const handleFilter =
-    (index: number) => (event: ChangeEvent<HTMLInputElement>) =>
-      onFilter(index, event.target.checked);
+export const Filters = ({ columns, onFilter, sx }: Props) => {
+  const onChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) =>
+    onFilter(index, event.target.checked);
 
   return (
-    <Box>
-      <Typography>
+    <Box sx={sx}>
+      <Typography gutterBottom>
         {columns.length > 0 ? (
           <>
             Could guess {columns.length} columns in the filtered lines. Use the
@@ -34,19 +35,15 @@ export const Filters = ({ columns, onFilter }: Props) => {
           </>
         )}
       </Typography>
-      <Box sx={{ mt: 1 }}>
-        <FormGroup row sx={{ gap: 1 }}>
-          {columns.map(([id, should], index) => (
-            <FormControlLabel
-              control={
-                <Checkbox checked={should} onChange={handleFilter(index)} />
-              }
-              key={id}
-              label={<code>{id}</code>}
-            />
-          ))}
-        </FormGroup>
-      </Box>
+      <FormGroup row sx={{ gap: 1 }}>
+        {columns.map(([id, should], index) => (
+          <FormControlLabel
+            control={<Checkbox checked={should} onChange={onChange(index)} />}
+            key={id}
+            label={<code>{id}</code>}
+          />
+        ))}
+      </FormGroup>
     </Box>
   );
 };
