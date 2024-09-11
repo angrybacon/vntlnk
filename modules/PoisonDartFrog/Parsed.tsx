@@ -9,23 +9,12 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
-import { Fragment } from 'react';
 
 import { Link } from '~/components/Link';
 import { Paper } from '~/components/Paper';
 import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
-
-const NEGATIVE = '#B3589A80';
-const POSITIVE = '#9BBF8580';
-
-const COLORS = Array(11)
-  .fill(null)
-  .map(
-    (_, index) => `color-mix(in srgb, ${NEGATIVE}, ${POSITIVE} ${index * 10}%)`,
-  );
-
-const confidenceToColor = (value: number) => COLORS[Math.floor(value / 10)];
+import { ParsedLine } from '~/modules/PoisonDartFrog/ParsedLine';
 
 type Props = {
   confidence: number;
@@ -117,54 +106,11 @@ export const Parsed = ({
         }}
       >
         {lines.map((line) => (
-          <Fragment key={line.id}>
-            <Box
-              sx={{
-                border: 1,
-                borderColor: 'divider',
-                borderRadius: 1,
-                px: 0.5,
-              }}
-            >
-              {line.confidence}%
-            </Box>
-            <Box sx={{ display: 'flex', gap: 0.5 }}>
-              {line.words.map((word) => (
-                <Tooltip
-                  enterTouchDelay={0}
-                  followCursor
-                  key={word.id}
-                  title={`Confidence: ${word.confidence}%`}
-                >
-                  <Box
-                    sx={[
-                      {
-                        alignItems: 'center',
-                        backgroundColor: 'grey.A200',
-                        borderRadius: 1,
-                        display: 'flex',
-                        overflow: 'hidden',
-                        userSelect: 'none',
-                      },
-                      !!pattern &&
-                        line.text.match(pattern) && {
-                          backgroundColor: confidenceToColor(word.confidence),
-                        },
-                    ]}
-                  >
-                    <Box
-                      sx={{
-                        px: 0.25,
-                        '&:hover': { backgroundColor: 'action.hover' },
-                      }}
-                    >
-                      {word.text}
-                    </Box>
-                  </Box>
-                </Tooltip>
-              ))}
-            </Box>
-          </Fragment>
+          <ParsedLine
+            isHighlighted={!!(pattern && line.text.match(pattern))}
+            key={line.id}
+            line={line}
+          />
         ))}
       </Box>
     </Paper>

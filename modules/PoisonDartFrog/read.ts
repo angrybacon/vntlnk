@@ -15,6 +15,20 @@ import { type Line } from '~/modules/PoisonDartFrog/models';
 //      we're stuck with Unpkg.
 GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
 
+const consolidate = (nodes: { hasEOL: boolean; str: string }[]) => {
+  const lines: Line[] = [{ confidence: 100, id: 0, text: '', words: [] }];
+  nodes.forEach(({ hasEOL, str }, index) => {
+    const current = lines.at(-1);
+    if (current) {
+      current.text += str;
+      if (hasEOL) {
+        lines.push({ confidence: 100, id: index, text: '', words: [] });
+      }
+    }
+  });
+  return { confidence: 100, lines };
+};
+
 const scan = async (
   page: PDFPageProxy,
 ): Promise<{ confidence: number; lines: Line[] }> => {
@@ -25,7 +39,7 @@ const scan = async (
     throw new Error('Could not guess 2D context for dummy canvas');
   }
   // NOTE Use a larger scale to increase confidence with the OCR results
-  canvas.width = 1600;
+  canvas.width = 1600; // TODO Allow restarting with different values
   const scale = canvas.width / viewport.width;
   canvas.height = scale * viewport.height;
   await page.render({
@@ -59,21 +73,12 @@ export const read = async (file: File, logger: (text: string) => void) => {
   const page = await pdf.getPage(1);
   // TODO Retrieve `page` and `meta` concurrently
   const meta = await pdf.getMetadata();
-  const text = await page.getTextContent();
+  const nodes = (await page.getTextContent()).items.filter((it) => 'str' in it);
   let confidence = 0;
   let lines: Line[] = [];
-  if (text.items.length) {
-    logger(`Found ${text.items.length} text nodes`);
-    confidence = 100;
-    lines = text.items.map((item, index) => {
-      const text = 'str' in item ? item.str.trim() : '';
-      return {
-        confidence: 100,
-        id: index,
-        text,
-        words: [{ confidence: 100, id: 0, text }],
-      };
-    });
+  if (nodes.length) {
+    ({ confidence, lines } = consolidate(nodes));
+    logger(`Found ${lines.length} lines of text (${nodes.length} text nodes)`);
   } else {
     logger('Found no text nodes, spawning an OCR worker...');
     ({ confidence, lines } = await scan(page));

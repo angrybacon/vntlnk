@@ -31,7 +31,7 @@ export const Filters = ({ columns, onFilter, sx }: Props) => {
         ) : (
           <>
             Could not guess any column. Adjust your query to find result rows
-            withint the parsed content.
+            within the parsed content.
           </>
         )}
       </Typography>
