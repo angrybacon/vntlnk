@@ -9,9 +9,11 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
+import { useEffect, type ChangeEvent } from 'react';
 
 import { Link } from '~/components/Link';
 import { Paper } from '~/components/Paper';
+import { useDebounce } from '~/hooks/useDebounce';
 import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 import { ParsedLine } from '~/modules/PoisonDartFrog/ParsedLine';
@@ -22,7 +24,6 @@ type Props = {
   onQuery(query: string): void;
   pattern: RegExp | undefined;
   patternError: string | undefined;
-  query: string;
 };
 
 export const Parsed = ({
@@ -31,15 +32,23 @@ export const Parsed = ({
   onQuery,
   pattern,
   patternError,
-  query,
 }: Props) => {
+  const [filter, setFilter, filterSafe] = useDebounce(QUERY_PATTERN);
+
+  useEffect(() => {
+    onQuery(filterSafe);
+  }, [filterSafe]);
+
   const errorIcon = <ErrorIcon color="error" />;
   const successIcon = <CheckCircleIcon />;
   const matches = pattern
     ? lines.filter((line) => line.text.match(pattern))
     : [];
 
-  const onReset = () => onQuery(QUERY_PATTERN);
+  const onFilter = ({ target }: ChangeEvent<HTMLInputElement>) =>
+    setFilter(target.value);
+
+  const onReset = () => setFilter(QUERY_PATTERN);
 
   return (
     <Paper>
@@ -56,11 +65,11 @@ export const Parsed = ({
           )
         }
         label="Filter parsed lines"
-        onChange={({ target }) => onQuery(target.value)}
+        onChange={onFilter}
         size="small"
         slotProps={{
           input: {
-            endAdornment: query !== QUERY_PATTERN && (
+            endAdornment: filterSafe !== QUERY_PATTERN && (
               <InputAdornment position="end">
                 <Tooltip title="Restore default value">
                   <IconButton onClick={onReset}>
@@ -72,7 +81,7 @@ export const Parsed = ({
           },
         }}
         sx={{ input: { fontFamily: 'monospace' } }}
-        value={query}
+        value={filter}
       />
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         <Chip

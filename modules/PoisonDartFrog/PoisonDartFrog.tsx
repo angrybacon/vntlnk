@@ -4,7 +4,7 @@ import { Box, Grid2 as Grid } from '@mui/material';
 import { NotificationsProvider } from '@toolpad/core';
 import { useEffect, useState } from 'react';
 
-import { COLUMNS, QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
+import { COLUMNS } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 import { Parsed } from '~/modules/PoisonDartFrog/Parsed';
 import { Preview } from '~/modules/PoisonDartFrog/Preview';
@@ -17,7 +17,7 @@ export const PoisonDartFrog = () => {
   const [columns, setColumns] = useState<typeof COLUMNS>([]);
   const [confidence, setConfidence] = useState(0);
   const [lines, setLines] = useState<Line[]>();
-  const [query, setQuery] = useState(QUERY_PATTERN);
+  const [query, setQuery] = useState('');
   const [pattern, setPattern] = useState<RegExp>();
   const [patternError, setPatternError] = useState<string>();
   const [preview, setPreview] = useState(false);
@@ -96,7 +96,6 @@ export const PoisonDartFrog = () => {
                 onQuery={setQuery}
                 pattern={pattern}
                 patternError={patternError}
-                query={query}
               />
             </Grid>
             <Grid size={{ xs: 12, md: 'grow' }}>

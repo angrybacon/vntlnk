@@ -2,12 +2,13 @@
 
 import { Box, Grid2 as Grid, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 
+import { Link } from '~/components/Link';
 import { useDebounce } from '~/hooks/useDebounce';
 import { scry, type Card } from '~/modules/AcronymFinder/scry';
 
-const INPUT_DELAY = 300;
+const DEFAULT_FILTER = 'prefer:oldest format:legacy';
 const IMAGE_HEIGHT = 204;
 const IMAGE_WIDTH = 146;
 
@@ -15,55 +16,65 @@ export const AcronymFinder = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
-  const [filter, setFilter] = useState('prefer:oldest format:legacy');
-  const [input, setInput] = useState('');
-  const debouncedFilter = useDebounce(filter, INPUT_DELAY).trim();
-  const debouncedInput = useDebounce(input, INPUT_DELAY).trim();
+  const [filter, setFilter, filterSafe] = useDebounce(DEFAULT_FILTER);
+  const [input, setInput, inputSafe] = useDebounce('');
 
   useEffect(() => {
     let should = true;
-    if (debouncedInput.length > 0) {
-      scry({ extra: debouncedFilter, query: debouncedInput }).then(
-        (response) => {
-          if (should) {
-            setError(null);
-            setWarnings(response.warnings || []);
-            if (response.object === 'list') {
-              setCards(response.data);
-            } else if (response.object === 'error') {
-              setCards([]);
-              setError(response.details);
-            }
+    if (inputSafe.length > 0) {
+      scry({ extra: filterSafe, query: inputSafe }).then((response) => {
+        if (should) {
+          setError(null);
+          setWarnings(response.warnings || []);
+          if (response.object === 'list') {
+            setCards(response.data);
+          } else if (response.object === 'error') {
+            setCards([]);
+            setError(response.details);
           }
-        },
-      );
+        }
+      });
     }
     return () => {
       should = false;
     };
-  }, [debouncedFilter, debouncedInput]);
+  }, [filterSafe, inputSafe]);
+
+  const onFilter = ({ target }: ChangeEvent<HTMLInputElement>) =>
+    setFilter(target.value);
+
+  const onInput = ({ target }: ChangeEvent<HTMLInputElement>) =>
+    setInput(target.value.toLocaleUpperCase().trim());
 
   return (
     <Grid container spacing={2}>
-      <Grid size={4}>
+      <Grid size={{ xs: 4, md: 2 }}>
         <TextField
           autoFocus
           fullWidth
           helperText="Search for cards that match an acronym"
           label="Your acronym"
-          onChange={({ target }) =>
-            setInput(target.value.toLocaleUpperCase().trim())
-          }
+          onChange={onInput}
+          size="small"
           value={input}
         />
       </Grid>
-      <Grid size={8}>
+      <Grid size={{ xs: 8, md: 10 }}>
         <TextField
           fullWidth
-          helperText="Narrow results using the Scryfall syntax"
+          helperText={
+            <>
+              Narrow results using the{' '}
+              <Link href="https://scryfall.com/docs/syntax">
+                Scryfall syntax
+              </Link>
+            </>
+          }
           label="Scryfall query"
-          onChange={({ target }) => setFilter(target.value)}
+          onChange={onFilter}
           value={filter}
+          size="small"
+          sx={{ input: { fontFamily: 'monospace' } }}
         />
       </Grid>
       {error && (
