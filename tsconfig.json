@@ -9,6 +9,7 @@
     "paths": {
       "~/app/*": ["app/*"],
       "~/components/*": ["components/*"],
+      "~/hooks/*": ["hooks/*"],
       "~/modules/*": ["modules/*"]
     },
     "plugins": [{ "name": "next" }]

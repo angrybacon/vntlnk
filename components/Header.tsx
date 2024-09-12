@@ -11,6 +11,7 @@ import {
 import NextLink from 'next/link';
 
 const LINKS: [path: string, label: string][] = [
+  ['/acronymfinder', 'Acronym Finder'],
   ['/poisondartfrog', 'Poison Dart Frog'],
 ] as const;
 

@@ -41,6 +41,9 @@ importers:
       tesseract.js:
         specifier: 5.1.1
         version: 5.1.1
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 4.3.1
