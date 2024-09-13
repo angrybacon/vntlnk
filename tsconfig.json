@@ -10,7 +10,8 @@
       "~/app/*": ["app/*"],
       "~/components/*": ["components/*"],
       "~/hooks/*": ["hooks/*"],
-      "~/modules/*": ["modules/*"]
+      "~/modules/*": ["modules/*"],
+      "~/providers/*": ["providers/*"]
     },
     "plugins": [{ "name": "next" }]
   },

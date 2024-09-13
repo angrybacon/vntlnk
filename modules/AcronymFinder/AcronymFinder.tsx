@@ -7,6 +7,7 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 import { Link } from '~/components/Link';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
 import { useDebounce } from '~/hooks/useDebounce';
+import { useProgress } from '~/hooks/useProgress';
 import { Help } from '~/modules/AcronymFinder/Help';
 import { scry, type Card, type Warning } from '~/modules/AcronymFinder/scry';
 
@@ -15,6 +16,7 @@ const IMAGE_HEIGHT = 204;
 const IMAGE_WIDTH = 146;
 
 export const AcronymFinder = () => {
+  const { setIsLoading } = useProgress();
   const [cards, setCards] = useState<Card[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [filter, setFilter, filterSafe] = useDebounce(DEFAULT_FILTER);
@@ -24,6 +26,7 @@ export const AcronymFinder = () => {
   useEffect(() => {
     let should = true;
     if (querySafe.length > 0) {
+      setIsLoading(true);
       scry({ extra: filterSafe, query: querySafe }).then((response) => {
         if (should) {
           setError(null);
@@ -36,6 +39,7 @@ export const AcronymFinder = () => {
             setError(response.details);
           }
         }
+        setIsLoading(false);
       });
     }
     return () => {

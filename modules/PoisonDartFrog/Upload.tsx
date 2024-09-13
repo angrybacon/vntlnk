@@ -3,6 +3,7 @@ import { alpha, Box, type SxProps } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 import { useState, type ChangeEvent, type DragEvent } from 'react';
 
+import { useProgress } from '~/hooks/useProgress';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 import { read } from '~/modules/PoisonDartFrog/read';
 
@@ -15,6 +16,7 @@ type Props = {
 
 export const Upload = ({ onRead, sx }: Props) => {
   const { show } = useNotifications();
+  const { setIsLoading } = useProgress();
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<'ok' | 'ko' | null>(null);
 
@@ -24,9 +26,11 @@ export const Upload = ({ onRead, sx }: Props) => {
       return;
     }
     setBusy(true);
+    setIsLoading(true);
     read(file, show).then(({ confidence, lines }) => {
       onRead({ confidence, lines, url: URL.createObjectURL(file) });
       setBusy(false);
+      setIsLoading(false);
     });
   };
 

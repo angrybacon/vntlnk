@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   IconButton,
+  LinearProgress,
   Menu,
   MenuItem,
   Slide,
@@ -16,12 +17,15 @@ import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, type MouseEvent } from 'react';
 
+import { useProgress } from '~/hooks/useProgress';
+
 const LINKS: [path: string, label: string][] = [
   ['/acronymfinder', 'Acronym Finder'],
   ['/poisondartfrog', 'Poison Dart Frog'],
 ] as const;
 
 export const Header = () => {
+  const { isLoading } = useProgress();
   const pathname = usePathname();
   const trigger = useScrollTrigger();
   const [menuRoot, setMenuRoot] = useState<HTMLElement | null>(null);
@@ -90,6 +94,12 @@ export const Header = () => {
             </Menu>
           </Box>
         </Toolbar>
+        {isLoading && (
+          <LinearProgress
+            color="secondary"
+            sx={{ bottom: 0, position: 'absolute', width: '100%' }}
+          />
+        )}
       </AppBar>
     </Slide>
   );
