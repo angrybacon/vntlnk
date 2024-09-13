@@ -1,7 +1,7 @@
 'use client';
 
 import { createTheme } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { grey, indigo, pink } from '@mui/material/colors';
 import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({
@@ -18,12 +18,6 @@ export const theme = createTheme({
         pre: { margin: 0 },
       },
     },
-    MuiPaper: {
-      defaultProps: { variant: 'outlined' },
-      styleOverrides: {
-        rounded: { borderRadius: 16 },
-      },
-    },
     MuiSnackbar: {
       defaultProps: { autoHideDuration: 4000 },
     },
@@ -31,7 +25,12 @@ export const theme = createTheme({
       defaultProps: { placement: 'top' },
     },
   },
-  palette: { background: { default: grey[50] }, mode: 'light' },
+  palette: {
+    background: { default: grey[50] },
+    mode: 'light',
+    primary: indigo,
+    secondary: pink,
+  },
   typography: {
     fontFamily: roboto.style.fontFamily,
   },

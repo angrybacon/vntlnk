@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +14,7 @@ import {
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 
+import { Paper } from '~/components/Paper';
 import { type COLUMNS } from '~/modules/PoisonDartFrog/constants';
 import { Filters } from '~/modules/PoisonDartFrog/Filters';
 
@@ -53,7 +53,7 @@ export const Results = ({ columns, onFilter, onPreview, rows }: Props) => {
   const iconStyles: SxProps = { display: { xs: 'none', sm: 'block' } };
 
   return (
-    <Paper>
+    <Paper dense>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
         <Button
           onClick={onPreview}
