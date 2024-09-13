@@ -18,6 +18,9 @@ export const theme = createTheme({
         pre: { margin: 0 },
       },
     },
+    MuiDialog: {
+      styleOverrides: { paper: { borderRadius: 16 } },
+    },
     MuiSnackbar: {
       defaultProps: { autoHideDuration: 4000 },
     },

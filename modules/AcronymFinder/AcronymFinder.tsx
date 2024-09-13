@@ -52,61 +52,61 @@ export const AcronymFinder = () => {
     setQuery(target.value.toLocaleUpperCase().trim());
 
   return (
-    <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ pt: 1 }}>
-      <Grid size={{ xs: 12, sm: 4 }}>
-        <TextField
-          autoFocus
-          fullWidth
-          helperText="Search for cards that match an acronym"
-          label="Your acronym"
-          onChange={onInput}
-          size="small"
-          value={query}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 8 }}>
-        <TextFieldWithReset
-          errors={warnings}
-          fullWidth
-          helperText={
-            <>
-              Narrow results using the{' '}
-              <Link href="https://scryfall.com/docs/syntax">
-                Scryfall syntax
-              </Link>
-            </>
-          }
-          isDirty={filterSafe !== DEFAULT_FILTER}
-          label="Scryfall query"
-          onChange={onFilter}
-          onReset={onFilterReset}
-          value={filter}
-          size="small"
-          sx={{ input: { fontFamily: 'monospace' } }}
-        />
+    <Box sx={{ display: 'grid', flexGrow: 1, gridTemplateRows: 'auto 1fr' }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ pt: 1 }}>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <TextField
+            autoFocus
+            fullWidth
+            helperText="Search for cards that match an acronym"
+            label="Your acronym"
+            onChange={onInput}
+            size="small"
+            sx={{ gridArea: 'input' }}
+            value={query}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <TextFieldWithReset
+            errors={warnings}
+            fullWidth
+            helperText={
+              <>
+                Narrow results using the{' '}
+                <Link href="https://scryfall.com/docs/syntax">
+                  Scryfall syntax
+                </Link>
+              </>
+            }
+            isDirty={filterSafe !== DEFAULT_FILTER}
+            label="Scryfall query"
+            onChange={onFilter}
+            onReset={onFilterReset}
+            value={filter}
+            size="small"
+            sx={{ gridArea: 'filter', input: { fontFamily: 'monospace' } }}
+          />
+        </Grid>
       </Grid>
       {error && (
-        <Grid size={12} sx={{ mt: 4, textAlign: 'center' }}>
+        <Box sx={{ m: 'auto', textAlign: 'center' }}>
           <Typography component="p" gutterBottom variant="h2">
             No cards found
           </Typography>
           <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
             {error}
           </Typography>
-        </Grid>
+        </Box>
       )}
-      {!error && !cards.length && (
-        <Grid size={12} sx={{ display: 'flex', mt: 4 }}>
-          <Help />
-        </Grid>
-      )}
+      {!error && !cards.length && <Help sx={{ m: 'auto' }} />}
       {cards.length > 0 && (
-        <Grid
-          size={12}
+        <Box
           sx={{
             display: 'grid',
             gap: { xs: 2, sm: 3 },
+            gridAutoRows: 'min-content',
             gridTemplateColumns: `repeat(auto-fill, minmax(${IMAGE_WIDTH}px, 1fr))`,
+            mt: { xs: 2, sm: 3 },
           }}
         >
           {cards.map((card) => (
@@ -131,8 +131,8 @@ export const AcronymFinder = () => {
               )}
             </Box>
           ))}
-        </Grid>
+        </Box>
       )}
-    </Grid>
+    </Box>
   );
 };

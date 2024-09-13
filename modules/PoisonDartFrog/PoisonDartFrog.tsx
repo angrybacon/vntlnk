@@ -84,11 +84,18 @@ export const PoisonDartFrog = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        gap: { xs: 2, sm: 3 },
+      }}
+    >
       <NotificationsProvider>
         <Upload onRead={onRead} sx={{ flexGrow: 1 }} />
         {lines && (
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
             <Grid size={{ xs: 12, md: 'grow' }}>
               <Parsed
                 confidence={confidence}

@@ -17,6 +17,7 @@ export const Preview = ({ file, onClose, open }: Props) => (
             border: 1,
             borderColor: 'divider',
             borderRadius: ({ shape }) => shape.borderRadius / 2,
+            display: 'block',
             height: '80vh',
             width: '100%',
           }}
