@@ -52,7 +52,14 @@ export const AcronymFinder = () => {
     setQuery(target.value.toLocaleUpperCase().trim());
 
   return (
-    <Box sx={{ display: 'grid', flexGrow: 1, gridTemplateRows: 'auto 1fr' }}>
+    <Box
+      sx={{
+        display: 'grid',
+        flexGrow: 1,
+        gap: { xs: 2, sm: 3 },
+        gridTemplateRows: 'auto 1fr',
+      }}
+    >
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ pt: 1 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
@@ -89,7 +96,7 @@ export const AcronymFinder = () => {
         </Grid>
       </Grid>
       {error && (
-        <Box sx={{ m: 'auto', textAlign: 'center' }}>
+        <Box sx={{ m: { sm: 'auto' }, textAlign: 'center' }}>
           <Typography component="p" gutterBottom variant="h2">
             No cards found
           </Typography>
@@ -98,7 +105,7 @@ export const AcronymFinder = () => {
           </Typography>
         </Box>
       )}
-      {!error && !cards.length && <Help sx={{ m: 'auto' }} />}
+      {!error && !cards.length && <Help sx={{ m: { sm: 'auto' } }} />}
       {cards.length > 0 && (
         <Box
           sx={{
@@ -106,7 +113,6 @@ export const AcronymFinder = () => {
             gap: { xs: 2, sm: 3 },
             gridAutoRows: 'min-content',
             gridTemplateColumns: `repeat(auto-fill, minmax(${IMAGE_WIDTH}px, 1fr))`,
-            mt: { xs: 2, sm: 3 },
           }}
         >
           {cards.map((card) => (
