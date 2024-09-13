@@ -17,11 +17,11 @@
   "dependencies": {
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
-    "@mui/icons-material": "6.0.2",
+    "@mui/icons-material": "6.1.0",
     "@mui/lab": "6.0.0-beta.9",
-    "@mui/material": "6.0.2",
+    "@mui/material": "6.1.0",
     "@toolpad/core": "0.5.2",
-    "next": "14.2.8",
+    "next": "14.2.11",
     "pdfjs-dist": "4.6.82",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -33,9 +33,9 @@
     "@korumite/ts": "1.1.0",
     "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
-    "knip": "5.29.2",
+    "knip": "5.30.2",
     "prettier": "3.3.3",
     "sass": "1.78.0",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   }
 }
