@@ -65,37 +65,15 @@ export const AcronymFinder = () => {
       </Grid>
       <Grid size={{ xs: 12, sm: 8 }}>
         <TextFieldWithReset
-          error={!!warnings.length}
+          errors={warnings}
           fullWidth
           helperText={
-            warnings.length ? (
-              <>
-                {warnings.map(({ id, text }, index) => (
-                  <Box
-                    component="span"
-                    key={id}
-                    sx={[
-                      index > 0 && {
-                        '&:before': {
-                          content: "'\\2022'",
-                          display: 'inline',
-                          mx: 0.5,
-                        },
-                      },
-                    ]}
-                  >
-                    {text}
-                  </Box>
-                ))}
-              </>
-            ) : (
-              <>
-                Narrow results using the{' '}
-                <Link href="https://scryfall.com/docs/syntax">
-                  Scryfall syntax
-                </Link>
-              </>
-            )
+            <>
+              Narrow results using the{' '}
+              <Link href="https://scryfall.com/docs/syntax">
+                Scryfall syntax
+              </Link>
+            </>
           }
           isDirty={filterSafe !== DEFAULT_FILTER}
           label="Scryfall query"

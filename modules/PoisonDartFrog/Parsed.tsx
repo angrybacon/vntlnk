@@ -1,18 +1,11 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
-import RestoreIcon from '@mui/icons-material/Restore';
-import {
-  Box,
-  Chip,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Tooltip,
-} from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import { useEffect, type ChangeEvent } from 'react';
 
 import { Link } from '~/components/Link';
 import { Paper } from '~/components/Paper';
+import { TextFieldWithReset } from '~/components/TextFieldWithReset';
 import { useDebounce } from '~/hooks/useDebounce';
 import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
@@ -52,34 +45,21 @@ export const Parsed = ({
 
   return (
     <Paper>
-      <TextField
-        error={!!patternError}
+      <TextFieldWithReset
+        errors={patternError}
         fullWidth
         helperText={
-          patternError || (
-            <>
-              Filter lines and use{' '}
-              <Link href="https://regex101.com">capturing groups</Link> to
-              target columns
-            </>
-          )
+          <>
+            Filter lines and use{' '}
+            <Link href="https://regex101.com">capturing groups</Link> to target
+            columns
+          </>
         }
+        isDirty={filterSafe !== QUERY_PATTERN}
         label="Filter parsed lines"
         onChange={onFilter}
+        onReset={onReset}
         size="small"
-        slotProps={{
-          input: {
-            endAdornment: filterSafe !== QUERY_PATTERN && (
-              <InputAdornment position="end">
-                <Tooltip title="Restore default value">
-                  <IconButton onClick={onReset}>
-                    <RestoreIcon />
-                  </IconButton>
-                </Tooltip>
-              </InputAdornment>
-            ),
-          },
-        }}
         sx={{ input: { fontFamily: 'monospace' } }}
         value={filter}
       />
