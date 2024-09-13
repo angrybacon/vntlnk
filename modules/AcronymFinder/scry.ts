@@ -9,10 +9,18 @@ const CardSchema = z.object({
 
 export type Card = z.infer<typeof CardSchema>;
 
+const WarningsSchema = z
+  .string()
+  .array()
+  .nullish()
+  .transform((values) => (values || []).map((text, id) => ({ id, text })));
+
+export type Warning = z.infer<typeof WarningsSchema>[number];
+
 const ErrorSchema = z.object({
   details: z.string(),
   object: z.literal('error'),
-  warnings: z.string().array().nullish(),
+  warnings: WarningsSchema,
 });
 
 const ListSchema = z.object({
@@ -20,7 +28,7 @@ const ListSchema = z.object({
   has_more: z.boolean(),
   object: z.literal('list'),
   total_cards: z.number().nullish(),
-  warnings: z.string().array().nullish(),
+  warnings: WarningsSchema,
 });
 
 const API = 'https://api.scryfall.com/cards/search';
