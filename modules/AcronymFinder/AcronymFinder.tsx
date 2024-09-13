@@ -94,6 +94,28 @@ export const AcronymFinder = () => {
           </Typography>
         </Grid>
       )}
+      {!error && !cards.length && (
+        <Grid size={12} sx={{ display: 'flex', mt: 4 }}>
+          <Typography
+            component="ul"
+            sx={{ color: 'text.secondary', fontStyle: 'italic' }}
+          >
+            <li>Default sorting is by color, then by name</li>
+            <li>
+              You won't find &ldquo;Collective Brutality&rdquo; by searching for{' '}
+              <code>COBRU</code> (yet?)
+            </li>
+            <li>
+              You won't find &ldquo;Dark Confidant&rdquo; by searching for{' '}
+              <code>BOB</code> (yet?)
+            </li>
+            <li>Only English card names are supported</li>
+            <li>
+              Queries are throttled, but there's no cache. Don't be an asshole
+            </li>
+          </Typography>
+        </Grid>
+      )}
       {cards.length > 0 && (
         <Grid
           size={12}
