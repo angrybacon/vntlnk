@@ -45,13 +45,13 @@ export const AcronymFinder = () => {
           if (response.object === 'list') {
             // TODO Handle pagination
             setCards(response.data.slice(0, 99));
+            inputRoot.current?.blur();
           } else if (response.object === 'error') {
             setCards([]);
             setError(response.details);
           }
         }
         setIsLoading(false);
-        inputRoot.current?.blur();
       });
     }
     return () => {
@@ -88,7 +88,6 @@ export const AcronymFinder = () => {
             size="small"
             spellCheck="false"
             sx={{ gridArea: 'input' }}
-            type="search"
             value={query}
           />
         </Grid>
@@ -111,7 +110,6 @@ export const AcronymFinder = () => {
             size="small"
             spellCheck="false"
             sx={{ gridArea: 'filter', input: { fontFamily: 'monospace' } }}
-            type="search"
             value={filter}
           />
         </Grid>

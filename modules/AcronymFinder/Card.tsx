@@ -29,7 +29,8 @@ export const Card = ({ card, height, width }: Props) => {
         // NOTE Force ratio to iron out irregularities from Scryfall
         aspectRatio: '5 / 7',
         backgroundColor: 'background.paper',
-        borderRadius: 2,
+        // NOTE Values stolen from Scryfall
+        borderRadius: card.set === 'lea' ? '7% / 5.5%' : '4.75% / 3.5%',
         boxShadow: 1,
         display: 'flex',
         img: {

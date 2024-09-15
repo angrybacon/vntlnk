@@ -5,6 +5,7 @@ const CardSchema = z.object({
   image_uris: z.object({ art_crop: z.string(), small: z.string() }).nullish(),
   object: z.literal('card'),
   name: z.string(),
+  set: z.string(),
 });
 
 export type Card = z.infer<typeof CardSchema>;
