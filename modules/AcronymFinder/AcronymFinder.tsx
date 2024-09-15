@@ -1,7 +1,13 @@
 'use client';
 
 import { Box, Grid2 as Grid, TextField, Typography } from '@mui/material';
-import { useEffect, useState, type ChangeEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ElementRef,
+} from 'react';
 
 import { Link } from '~/components/Link';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
@@ -21,6 +27,7 @@ const IMAGE_WIDTH = 146;
 
 export const AcronymFinder = () => {
   const { setIsLoading } = useProgress();
+  const inputRoot = useRef<ElementRef<'input'>>();
   const [cards, setCards] = useState<CardModel[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [filter, setFilter, filterSafe] = useDebounce(DEFAULT_FILTER);
@@ -44,6 +51,7 @@ export const AcronymFinder = () => {
           }
         }
         setIsLoading(false);
+        inputRoot.current?.blur();
       });
     }
     return () => {
@@ -71,13 +79,16 @@ export const AcronymFinder = () => {
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ pt: 1 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
-            autoFocus // TODO Unfocus on results
+            autoFocus
             fullWidth
             helperText="Search for cards that match an acronym"
+            inputRef={inputRoot}
             label="Your acronym"
             onChange={onInput}
             size="small"
+            spellCheck="false"
             sx={{ gridArea: 'input' }}
+            type="search"
             value={query}
           />
         </Grid>
@@ -97,9 +108,11 @@ export const AcronymFinder = () => {
             label="Scryfall query"
             onChange={onFilter}
             onReset={onFilterReset}
-            value={filter}
             size="small"
+            spellCheck="false"
             sx={{ gridArea: 'filter', input: { fontFamily: 'monospace' } }}
+            type="search"
+            value={filter}
           />
         </Grid>
       </Grid>
