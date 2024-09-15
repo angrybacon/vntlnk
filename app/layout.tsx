@@ -14,8 +14,8 @@ import { Header } from '~/components/Header';
 import { ProgressProvider } from '~/providers/Progress';
 
 export const metadata: Metadata = {
-  description: 'A bridge with EventLink',
-  title: 'Vntlnk',
+  description: 'A tote bag of Magic: the Gathering related utilities',
+  title: { default: 'Vntlnk', template: '%s • Vntlnk' },
 };
 
 export const viewport: Viewport = {

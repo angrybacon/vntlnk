@@ -1,15 +1,19 @@
 'use client';
 
 import { Box, Grid2 as Grid, TextField, Typography } from '@mui/material';
-import Image from 'next/image';
 import { useEffect, useState, type ChangeEvent } from 'react';
 
 import { Link } from '~/components/Link';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
 import { useDebounce } from '~/hooks/useDebounce';
 import { useProgress } from '~/hooks/useProgress';
+import { Card } from '~/modules/AcronymFinder/Card';
 import { Help } from '~/modules/AcronymFinder/Help';
-import { scry, type Card, type Warning } from '~/modules/AcronymFinder/scry';
+import {
+  scry,
+  type Card as CardModel,
+  type Warning,
+} from '~/modules/AcronymFinder/scry';
 
 const DEFAULT_FILTER = 'prefer:oldest format:legacy';
 const IMAGE_HEIGHT = 204;
@@ -17,7 +21,7 @@ const IMAGE_WIDTH = 146;
 
 export const AcronymFinder = () => {
   const { setIsLoading } = useProgress();
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<CardModel[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [filter, setFilter, filterSafe] = useDebounce(DEFAULT_FILTER);
   const [query, setQuery, querySafe] = useDebounce('');
@@ -67,7 +71,7 @@ export const AcronymFinder = () => {
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ pt: 1 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
-            autoFocus
+            autoFocus // TODO Unfocus on results
             fullWidth
             helperText="Search for cards that match an acronym"
             label="Your acronym"
@@ -120,26 +124,12 @@ export const AcronymFinder = () => {
           }}
         >
           {cards.map((card) => (
-            <Box
+            <Card
+              card={card}
+              height={IMAGE_HEIGHT}
               key={card.id}
-              sx={{
-                borderRadius: 2,
-                boxShadow: 1,
-                img: { display: 'block', height: 'auto', width: '100%' },
-                overflow: 'clip',
-              }}
-            >
-              {card.image_uris ? (
-                <Image
-                  alt={card.name}
-                  height={IMAGE_HEIGHT}
-                  src={card.image_uris.small}
-                  width={IMAGE_WIDTH}
-                />
-              ) : (
-                'N/A'
-              )}
-            </Box>
+              width={IMAGE_WIDTH}
+            />
           ))}
         </Box>
       )}
