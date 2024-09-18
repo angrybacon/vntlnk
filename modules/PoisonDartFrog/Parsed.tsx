@@ -6,7 +6,7 @@ import { useEffect, type ChangeEvent } from 'react';
 import { Link } from '~/components/Link';
 import { Paper } from '~/components/Paper';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
-import { useDebounce } from '~/hooks/useDebounce';
+import { useStateSafe } from '~/hooks/useStateSafe';
 import { QUERY_PATTERN } from '~/modules/PoisonDartFrog/constants';
 import { type Line } from '~/modules/PoisonDartFrog/models';
 import { ParsedLine } from '~/modules/PoisonDartFrog/ParsedLine';
@@ -26,7 +26,7 @@ export const Parsed = ({
   pattern,
   patternError,
 }: Props) => {
-  const [filter, setFilter, filterSafe] = useDebounce(QUERY_PATTERN);
+  const [filter, setFilter, filterSafe] = useStateSafe(QUERY_PATTERN);
 
   useEffect(() => {
     onQuery(filterSafe);

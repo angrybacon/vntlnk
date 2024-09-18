@@ -39,7 +39,7 @@ export const scry = async (options: { extra: string; query: string }) => {
   const pattern = query.split('').map((character) => `\\b${character}[^-\\s]*`);
   const parameters: string = Object.entries({
     order: 'color',
-    q: `name:\/^${pattern.join('[-\\s]')}$\/ ${extra}`,
+    q: `name:\/^${pattern.join('([-\\s]| \\/\\/ )')}$\/ ${extra}`,
   })
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');

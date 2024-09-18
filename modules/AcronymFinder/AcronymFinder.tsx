@@ -11,8 +11,8 @@ import {
 
 import { Link } from '~/components/Link';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
-import { useDebounce } from '~/hooks/useDebounce';
 import { useProgress } from '~/hooks/useProgress';
+import { useStateSafe } from '~/hooks/useStateSafe';
 import { Card } from '~/modules/AcronymFinder/Card';
 import { Help } from '~/modules/AcronymFinder/Help';
 import {
@@ -21,7 +21,7 @@ import {
   type Warning,
 } from '~/modules/AcronymFinder/scry';
 
-const DEFAULT_FILTER = 'prefer:oldest format:legacy';
+const DEFAULT_FILTER = 'prefer:oldest -s:lea f:legacy';
 const IMAGE_HEIGHT = 204;
 const IMAGE_WIDTH = 146;
 
@@ -30,8 +30,8 @@ export const AcronymFinder = () => {
   const inputRoot = useRef<ElementRef<'input'>>();
   const [cards, setCards] = useState<CardModel[]>([]);
   const [error, setError] = useState<null | string>(null);
-  const [filter, setFilter, filterSafe] = useDebounce(DEFAULT_FILTER);
-  const [query, setQuery, querySafe] = useDebounce('');
+  const [filter, setFilter, filterSafe] = useStateSafe(DEFAULT_FILTER);
+  const [query, setQuery, querySafe] = useStateSafe('');
   const [warnings, setWarnings] = useState<Warning[]>([]);
 
   useEffect(() => {

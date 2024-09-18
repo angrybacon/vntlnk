@@ -14,7 +14,7 @@ export const Help = ({ sx }: Props) => (
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
   >
-    <li>Default sorting is by color, then by name, ascending</li>
+    <li>Default sorting is color then name, ascending</li>
     <li>Case is insensitive</li>
     <li>Only English card names are supported</li>
     <li>Only the first 99 matches are displayed</li>
@@ -29,6 +29,10 @@ export const Help = ({ sx }: Props) => (
     <li>
       Nicknames are not supported eg.{' '}
       <Acronym definition="Dark Confidant" text="Bob" />
+    </li>
+    <li>
+      Abbreviations are not supported eg.{' '}
+      <Acronym definition="Devil K. Nevil" text="DKN" />
     </li>
     <li>Queries are throttled, but there's no cache. Don't be an asshole</li>
   </Typography>
