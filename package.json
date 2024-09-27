@@ -9,7 +9,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "pnpm run '/^lint:[^:]+$/'",
-    "lint:format": "prettier --check --log-level warn app/ components/",
+    "lint:format": "prettier --check --log-level warn {app,components,hooks,modules,providers}",
     "lint:prune": "knip",
     "lint:typings": "tsc",
     "start": "next start"
@@ -17,11 +17,11 @@
   "dependencies": {
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
-    "@mui/icons-material": "6.1.0",
-    "@mui/lab": "6.0.0-beta.9",
-    "@mui/material": "6.1.0",
-    "@toolpad/core": "0.6.0",
-    "next": "14.2.12",
+    "@mui/icons-material": "6.1.1",
+    "@mui/lab": "6.0.0-beta.10",
+    "@mui/material": "6.1.1",
+    "@toolpad/core": "0.7.0",
+    "next": "14.2.13",
     "pdfjs-dist": "4.6.82",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -31,11 +31,11 @@
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.3.1",
     "@korumite/ts": "1.1.0",
-    "@types/react": "18.3.7",
+    "@types/react": "18.3.9",
     "@types/react-dom": "18.3.0",
-    "knip": "5.30.2",
+    "knip": "5.30.6",
     "prettier": "3.3.3",
-    "sass": "1.79.1",
+    "sass": "1.79.3",
     "typescript": "5.6.2"
   }
 }
