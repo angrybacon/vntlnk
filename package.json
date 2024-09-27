@@ -9,7 +9,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "pnpm run '/^lint:[^:]+$/'",
-    "lint:format": "prettier --check --log-level warn {app,components,hooks,modules,providers}",
+    "lint:format": "prettier --check --log-level warn app/ components/ hooks/ modules/ providers/ ",
     "lint:prune": "knip",
     "lint:typings": "tsc",
     "start": "next start"
