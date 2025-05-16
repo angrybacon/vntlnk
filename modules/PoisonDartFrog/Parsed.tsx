@@ -52,7 +52,7 @@ export const Parsed = ({
           <>
             Filter lines and use{' '}
             <Link href="https://regex101.com">capturing groups</Link> to target
-            columns
+            specific columns
           </>
         }
         isDirty={filterSafe !== QUERY_PATTERN}

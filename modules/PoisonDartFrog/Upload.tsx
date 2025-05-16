@@ -1,5 +1,4 @@
-import { LoadingButton } from '@mui/lab';
-import { alpha, Box, type SxProps } from '@mui/material';
+import { alpha, Box, Button, type SxProps } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 import { useState, type ChangeEvent, type DragEvent } from 'react';
 
@@ -20,18 +19,22 @@ export const Upload = ({ onRead, sx }: Props) => {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<'ok' | 'ko' | null>(null);
 
-  const handleUpload = (file: File | null | undefined) => {
+  const handleUpload = async (file: File | null | undefined) => {
     if (!file) {
-      show('Something went real bad. Somehow I lost your file');
+      show('Something went real bad. Somehow I lost track of your file');
       return;
     }
     setBusy(true);
     setIsLoading(true);
-    read(file, show).then(({ confidence, lines }) => {
+    try {
+      const { confidence, lines } = await read(file, show);
       onRead({ confidence, lines, url: URL.createObjectURL(file) });
+    } catch (error) {
+      show(error instanceof Error ? error.message : `${error}`);
+    } finally {
       setBusy(false);
       setIsLoading(false);
-    });
+    }
   };
 
   const onDragEnter = (event: DragEvent<HTMLDivElement>) => {
@@ -106,7 +109,7 @@ export const Upload = ({ onRead, sx }: Props) => {
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
-      <LoadingButton
+      <Button
         component="label"
         disabled={status === 'ko'}
         loading={busy}
@@ -131,7 +134,7 @@ export const Upload = ({ onRead, sx }: Props) => {
           }}
           type="file"
         />
-      </LoadingButton>
+      </Button>
     </Box>
   );
 };

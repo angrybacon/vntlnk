@@ -10,6 +10,8 @@ const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
 });
 
+const { breakpoints } = createTheme();
+
 export const theme = createTheme({
   components: {
     MuiCssBaseline: {
@@ -23,6 +25,11 @@ export const theme = createTheme({
     },
     MuiSnackbar: {
       defaultProps: { autoHideDuration: 4000 },
+      styleOverrides: {
+        anchorOriginBottomLeft: {
+          [breakpoints.up('sm')]: { left: 16, bottom: 16 },
+        },
+      },
     },
     MuiTooltip: {
       defaultProps: { placement: 'top' },

@@ -14,7 +14,7 @@ export const Footer = ({ sx }: Props) => (
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
   >
-    &copy; 2024 Vntlnk contributors. Read the notice about{' '}
+    &copy; 2025 Vntlnk contributors. Read the notice about{' '}
     <Link href="/license">licenses and resources</Link>.
   </Box>
 );

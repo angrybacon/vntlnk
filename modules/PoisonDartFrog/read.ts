@@ -35,13 +35,12 @@ const scan = async (
   const viewport = page.getViewport({ scale: 1 });
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
-  if (!context) {
-    throw new Error('Could not guess 2D context for dummy canvas');
-  }
+  if (!context) throw new Error('Could not guess 2D context for dummy canvas');
   // NOTE Use a larger scale to increase confidence with the OCR results
   canvas.width = 1600; // TODO Allow restarting with different values
   const scale = canvas.width / viewport.width;
   canvas.height = scale * viewport.height;
+  console.info(`Rendering a ${canvas.width}:${canvas.height} canvas...`);
   await page.render({
     canvasContext: context,
     viewport: page.getViewport({ scale }),
@@ -49,21 +48,28 @@ const scan = async (
   const image = canvas.toDataURL('image/jpeg');
   console.info('Spawning an OCR worker...');
   const worker = await createWorker();
-  const { data } = await worker.recognize(image);
+  const { data } = await worker.recognize(image, {}, { blocks: true });
   await worker.terminate();
   console.info('Successfully killed the worker');
+  if (!data.blocks?.[0]) throw new Error('Found no Tesseract blocks in image');
   return {
     confidence: Math.round(data.confidence * 100) / 100,
-    lines: data.lines.map((line, index) => ({
-      confidence: Math.round(line.confidence * 100) / 100,
-      id: index,
-      text: line.text.replaceAll('\n', ''),
-      words: line.words.map((word, index) => ({
-        confidence: Math.round(word.confidence * 100) / 100,
+    lines: data.blocks
+      .map((block) => block.paragraphs)
+      .flat()
+      .map((paragraph, index) => ({
+        confidence: Math.round(paragraph.confidence * 100) / 100,
         id: index,
-        text: word.text,
+        text: paragraph.text.replaceAll('\n', ''),
+        words: paragraph.lines
+          .map((line) => line.words)
+          .flat()
+          .map((word, index) => ({
+            confidence: Math.round(word.confidence * 100) / 100,
+            id: index,
+            text: word.text,
+          })),
       })),
-    })),
   };
 };
 

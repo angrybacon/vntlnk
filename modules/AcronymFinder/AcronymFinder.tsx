@@ -1,12 +1,12 @@
 'use client';
 
-import { Box, Grid2 as Grid, TextField, Typography } from '@mui/material';
+import { Box, Grid, TextField, Typography } from '@mui/material';
 import {
   useEffect,
   useRef,
   useState,
   type ChangeEvent,
-  type ElementRef,
+  type ComponentRef,
 } from 'react';
 
 import { Link } from '~/components/Link';
@@ -27,7 +27,7 @@ const IMAGE_WIDTH = 146;
 
 export const AcronymFinder = () => {
   const { setIsLoading } = useProgress();
-  const inputRoot = useRef<ElementRef<'input'>>();
+  const inputRoot = useRef<ComponentRef<'input'>>(null);
   const [cards, setCards] = useState<CardModel[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [filter, setFilter, filterSafe] = useStateSafe(DEFAULT_FILTER);

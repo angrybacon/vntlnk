@@ -41,6 +41,9 @@ export const Help = ({ sx }: Props) => (
       Abbreviations are not supported eg.{' '}
       <Acronym definition="Devil K. Nevil" text="DKN" />
     </li>
-    <li>Queries are throttled, but there's no cache. Don't be an asshole</li>
+    <li>
+      Queries are throttled, but there's no cache beyond that of your browser.
+      Don't be an asshole
+    </li>
   </Typography>
 );

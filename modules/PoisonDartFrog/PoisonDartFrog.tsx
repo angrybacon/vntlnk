@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Grid2 as Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { NotificationsProvider } from '@toolpad/core';
 import { useEffect, useState } from 'react';
 

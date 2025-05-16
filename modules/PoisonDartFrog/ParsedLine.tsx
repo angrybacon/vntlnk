@@ -32,7 +32,7 @@ export const ParsedLine = ({ isHighlighted, line }: Props) => (
         {line.confidence}%
       </Box>
     ) : (
-      // NOTE The parent grid expects an prefix for alignment purposes
+      // NOTE The parent grid expects a prefix for alignment purposes
       <div />
     )}
     <Box sx={{ display: 'flex', gap: 0.5 }}>
@@ -53,21 +53,20 @@ export const ParsedLine = ({ isHighlighted, line }: Props) => (
                     borderRadius: 1,
                     display: 'flex',
                     overflow: 'hidden',
+                    px: 0.25,
                     userSelect: 'none',
+                    '&:hover': {
+                      outlineColor: 'action.active',
+                      outlineStyle: 'solid',
+                      outlineWidth: 1,
+                    },
                   },
                   isHighlighted && {
                     backgroundColor: toColor(word.confidence),
                   },
                 ]}
               >
-                <Box
-                  sx={{
-                    px: 0.25,
-                    '&:hover': { backgroundColor: 'action.hover' },
-                  }}
-                >
-                  {word.text}
-                </Box>
+                {word.text}
               </Box>
             </Tooltip>
           ))}
