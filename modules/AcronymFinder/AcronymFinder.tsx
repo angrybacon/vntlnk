@@ -45,7 +45,6 @@ export const AcronymFinder = () => {
           if (response.object === 'list') {
             // TODO Handle pagination
             setCards(response.data.slice(0, 99));
-            inputRoot.current?.blur();
           } else if (response.object === 'error') {
             setCards([]);
             setError(response.details);
