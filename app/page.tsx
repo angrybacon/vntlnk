@@ -13,7 +13,6 @@ export default function Page() {
         use, therefore you cannot complain about bugs but if you must, please do
         it <Link href="https://github.com/angrybacon/vntlnk/issues">here</Link>.
       </Typography>
-      <Typography gutterBottom></Typography>
       <Typography gutterBottom>
         Provided as is, both <em>gratis</em> and <em>libre</em> with no warranty
         of any kind.

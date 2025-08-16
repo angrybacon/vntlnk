@@ -35,9 +35,9 @@ export const Card = ({ card, height, width }: Props) => {
         display: 'flex',
         img: {
           display: 'block',
-          height: '100%',
+          height: 1,
           objectFit: 'cover',
-          width: '100%',
+          width: 1,
         },
         justifyContent: 'center',
         overflow: 'clip',

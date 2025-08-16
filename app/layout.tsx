@@ -28,8 +28,8 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box component="html" lang="en">
-        <Box component="body">
+      <html lang="en">
+        <body>
           <ProgressProvider>
             <Header />
             <Container
@@ -38,18 +38,18 @@ export default function Layout({ children }: PropsWithChildren) {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: '100%',
+                minHeight: 1,
                 pb: 2,
                 pt: { xs: 2, sm: 3 },
               }}
             >
-              <Toolbar role="presentation" />
+              <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
               {children}
-              <Footer sx={{ mt: 'auto', pt: 2, textAlign: 'center' }} />
+              <Footer sx={{ flexShrink: 0, mt: 'auto', pt: 2 }} />
             </Container>
           </ProgressProvider>
-        </Box>
-      </Box>
+        </body>
+      </html>
     </ThemeProvider>
   );
 }

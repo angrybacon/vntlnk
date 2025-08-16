@@ -16,10 +16,10 @@ export const Preview = ({ file, onClose, open }: Props) => (
           sx={{
             border: 1,
             borderColor: 'divider',
-            borderRadius: ({ shape }) => shape.borderRadius / 2,
+            borderRadius: 2,
             display: 'block',
             height: '80vh',
-            width: '100%',
+            width: 1,
           }}
         />
       </Box>
