@@ -4,6 +4,28 @@ import Image from 'next/image';
 import { Paper } from '~/components/Paper';
 import { Wizard } from '~/modules/ProxyMaker/Wizard';
 
+const FRAMES: Record<string, Record<string, { label: string; path: string }>> =
+  // prettier-ignore
+  {
+    land: {
+      colorless: { label: 'Colorless', path: 'land.colorless.png' },
+      white:     { label: 'White',     path: 'land.white.png' },
+      blue:      { label: 'Blue',      path: 'land.blue.png' },
+      black:     { label: 'Black',     path: 'land.black.png' },
+      red:       { label: 'Red',       path: 'land.red.png' },
+      green:     { label: 'Green',     path: 'land.green.png' },
+    },
+    retro: {
+      artifact:  { label: 'Artifact',  path: 'retro.artifact.png' },
+      white:     { label: 'White',     path: 'retro.white.png' },
+      blue:      { label: 'Blue',      path: 'retro.blue.png' },
+      black:     { label: 'Black',     path: 'retro.black.png' },
+      red:       { label: 'Red',       path: 'retro.red.png' },
+      green:     { label: 'Green',     path: 'retro.green.png' },
+      gold:      { label: 'Gold',      path: 'retro.gold.png' },
+    },
+  };
+
 type Props = Partial<
   Record<
     | 'artwork'
@@ -19,7 +41,8 @@ type Props = Partial<
 >;
 
 export const ProxyMaker = ({ ...values }: Props) => {
-  console.info(values);
+  const [kind = '', color = ''] = `${values.frame}`.split('.');
+  const frame = FRAMES[kind]?.[color]?.path;
   return (
     <Box
       sx={{
@@ -44,29 +67,30 @@ export const ProxyMaker = ({ ...values }: Props) => {
             height: 1,
           }}
         >
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-          <Wizard />
+          <Wizard frames={FRAMES} />
         </Paper>
       </Box>
-      <Box
-        sx={{
-          bgcolor: 'common.black',
-          borderRadius: 4,
-          boxShadow: 4,
-          display: { xs: 'none', md: 'block' },
-          overflow: 'hidden',
-        }}
-      >
+      {frame && (
         <Box
           sx={{
-            aspectRatio: '715 / 1001', // NOTE Or 5:7
-            height: 1,
-            position: 'relative',
+            bgcolor: 'common.black',
+            borderRadius: 4,
+            boxShadow: 4,
+            display: { xs: 'none', md: 'block' },
+            overflow: 'hidden',
           }}
         >
-          <Image alt="Back" fill src="/frames/back.png" />
+          <Box
+            sx={{
+              aspectRatio: '715 / 1001', // NOTE Or 5:7
+              height: 1,
+              position: 'relative',
+            }}
+          >
+            <Image alt="Back" fill src={`/frames/${frame}`} />
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

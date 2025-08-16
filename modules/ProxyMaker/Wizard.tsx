@@ -2,18 +2,16 @@
 
 import {
   Box,
-  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
   TextField,
   textFieldClasses,
+  type SelectChangeEvent,
   type SxProps,
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  useCallback,
-  useRef,
-  type ChangeEvent,
-  type ComponentPropsWithoutRef,
-} from 'react';
+import { useCallback, useRef, type ChangeEvent } from 'react';
 
 const FIELD_STYLES = {
   FULL: { flexBasis: '100%' },
@@ -21,13 +19,23 @@ const FIELD_STYLES = {
   WIDE: { flexBasis: 0, minWidth: 300 },
 } as const satisfies Record<string, SxProps>;
 
-export const Wizard = () => {
+type Props = {
+  frames: Record<string, Record<string, { label: string; path: string }>>;
+};
+
+export const Wizard = ({ frames }: Props) => {
   const router = useRouter();
   const parameters = useSearchParams();
   const initial = useRef(parameters);
 
   const onChange = useCallback(
-    ({ target }: ChangeEvent<HTMLInputElement>) => {
+    <TKind extends 'text' | 'select'>({
+      target,
+    }: TKind extends 'text'
+      ? ChangeEvent<HTMLInputElement>
+      : TKind extends 'select'
+        ? SelectChangeEvent
+        : never) => {
       const query = new URLSearchParams(parameters.toString());
       query.set(target.name, target.value);
       query.sort();
@@ -36,16 +44,17 @@ export const Wizard = () => {
     [parameters, router],
   );
 
-  const makeProperties = (
+  const makeProperties = <TKind extends 'select' | 'text' = 'text'>(
     name: Lowercase<string>,
     label: String,
-  ): ComponentPropsWithoutRef<typeof TextField> => ({
-    defaultValue: initial.current.get(name),
-    label,
-    name,
-    onChange,
-    size: 'small',
-  });
+  ) =>
+    ({
+      defaultValue: initial.current.get(name) || '',
+      id: name,
+      label,
+      name,
+      onChange: onChange<TKind>,
+    }) as const;
 
   return (
     <Box
@@ -56,14 +65,21 @@ export const Wizard = () => {
         [`.${textFieldClasses.root}`]: { flexGrow: 1 },
       }}
     >
-      <TextField
-        {...makeProperties('frame', 'Frame')}
-        select
-        sx={FIELD_STYLES.SMALL}
-      >
-        <MenuItem value="adventure">Adventure</MenuItem>
-        <MenuItem value="old">Old</MenuItem>
-      </TextField>
+      <FormControl sx={FIELD_STYLES.SMALL}>
+        <InputLabel htmlFor="frame">Frame</InputLabel>
+        <Select {...makeProperties<'select'>('frame', 'Frame')} native>
+          <option aria-label="None" value="" />
+          {Object.entries(frames).map(([kind, colors]) => (
+            <optgroup key={kind} label={kind}>
+              {Object.entries(colors).map(([color, { label }]) => (
+                <option key={color} value={`${kind}.${color}`}>
+                  {label}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </Select>
+      </FormControl>
       <TextField
         {...makeProperties('mana', 'Mana cost')}
         sx={FIELD_STYLES.SMALL}
