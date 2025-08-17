@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
 import { Paper } from '~/components/Paper';
+import { type FIELDS } from '~/modules/ProxyMaker/fields';
 import { Preview } from '~/modules/ProxyMaker/Preview';
 import { Wizard } from '~/modules/ProxyMaker/Wizard';
 
@@ -27,17 +28,7 @@ const FRAMES: Record<string, Record<string, { label: string; path: string }>> =
   };
 
 type Props = Partial<
-  Record<
-    | 'artwork'
-    | 'flavor'
-    | 'frame'
-    | 'mana'
-    | 'name'
-    | 'subtypes'
-    | 'text'
-    | 'types',
-    string | string[]
-  >
+  Record<Lowercase<(typeof FIELDS)[number]>, string | string[]>
 >;
 
 export const ProxyMaker = ({ ...values }: Props) => {

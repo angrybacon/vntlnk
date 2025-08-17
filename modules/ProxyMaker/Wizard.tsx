@@ -13,6 +13,8 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useRef, type ChangeEvent } from 'react';
 
+import { type FIELDS } from '~/modules/ProxyMaker/fields';
+
 const FIELD_STYLES = {
   FULL: { flexBasis: '100%' },
   SMALL: { flexBasis: 0, flexGrow: 1, minWidth: 160 },
@@ -46,16 +48,18 @@ export const Wizard = ({ frames }: Props) => {
   );
 
   const makeProperties = <TKind extends 'select' | 'text' = 'text'>(
-    name: Lowercase<string>,
+    name: (typeof FIELDS)[number],
     label: String,
-  ) =>
-    ({
-      defaultValue: initial.current.get(name) || '',
-      id: name,
+  ) => {
+    const id = name.toLowerCase();
+    return {
+      defaultValue: initial.current.get(id) || '',
+      id,
       label,
-      name,
+      name: id,
       onChange: onChange<TKind>, // TODO Throttle user input
-    }) as const;
+    } as const;
+  };
 
   return (
     <Box
@@ -68,7 +72,7 @@ export const Wizard = ({ frames }: Props) => {
     >
       <FormControl sx={FIELD_STYLES.SMALL}>
         <InputLabel htmlFor="frame">Frame</InputLabel>
-        <Select {...makeProperties<'select'>('frame', 'Frame')} native>
+        <Select {...makeProperties<'select'>('FRAME', 'Frame')} native>
           <option aria-label="None" value="" />
           {Object.entries(frames).map(([kind, colors]) => (
             <optgroup key={kind} label={kind}>
@@ -82,31 +86,31 @@ export const Wizard = ({ frames }: Props) => {
         </Select>
       </FormControl>
       <TextField
-        {...makeProperties('mana', 'Mana cost')}
+        {...makeProperties('MANA', 'Mana cost')}
         sx={FIELD_STYLES.SMALL}
       />
-      <TextField {...makeProperties('name', 'Name')} sx={FIELD_STYLES.WIDE} />
+      <TextField {...makeProperties('NAME', 'Name')} sx={FIELD_STYLES.WIDE} />
       <TextField
-        {...makeProperties('artwork', 'Artwork')}
+        {...makeProperties('ARTWORK', 'Artwork')}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('types', 'Types and supertypes')}
+        {...makeProperties('TYPES', 'Types and supertypes')}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('subtypes', 'Subtypes')}
+        {...makeProperties('SUBTYPES', 'Subtypes')}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('text', 'Text box')}
+        {...makeProperties('TEXT', 'Text box')}
         maxRows={8}
         minRows={2}
         multiline
         sx={FIELD_STYLES.FULL}
       />
       <TextField
-        {...makeProperties('flavor', 'Flavor text')}
+        {...makeProperties('FLAVOR', 'Flavor text')}
         maxRows={8}
         minRows={2}
         multiline
