@@ -37,7 +37,8 @@ export const Wizard = ({ frames }: Props) => {
         ? SelectChangeEvent
         : never) => {
       const query = new URLSearchParams(parameters.toString());
-      query.set(target.name, target.value);
+      if (target.value) query.set(target.name, target.value);
+      else query.delete(target.name);
       query.sort();
       router.replace(`?${query.toString()}`);
     },
@@ -53,7 +54,7 @@ export const Wizard = ({ frames }: Props) => {
       id: name,
       label,
       name,
-      onChange: onChange<TKind>,
+      onChange: onChange<TKind>, // TODO Throttle user input
     }) as const;
 
   return (
@@ -99,7 +100,8 @@ export const Wizard = ({ frames }: Props) => {
       />
       <TextField
         {...makeProperties('text', 'Text box')}
-        minRows={4}
+        maxRows={8}
+        minRows={4} // TODO This causes CLS
         multiline
         sx={FIELD_STYLES.FULL}
       />

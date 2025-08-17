@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
-import Image from 'next/image';
+import { Box, Typography } from '@mui/material';
 
 import { Paper } from '~/components/Paper';
+import { Preview } from '~/modules/ProxyMaker/Preview';
 import { Wizard } from '~/modules/ProxyMaker/Wizard';
 
 const FRAMES: Record<string, Record<string, { label: string; path: string }>> =
@@ -44,53 +44,39 @@ export const ProxyMaker = ({ ...values }: Props) => {
   const [kind = '', color = ''] = `${values.frame}`.split('.');
   const frame = FRAMES[kind]?.[color]?.path;
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        flexGrow: 1,
-        gap: { xs: 2, sm: 3 },
-        gridTemplateColumns: '1fr auto',
-      }}
-    >
-      <Box
+    <Box sx={{ display: 'flex', gap: { xs: 2, sm: 3 } }}>
+      <Paper
         sx={{
-          gridColumn: { xs: '1 / -1', md: 'initial' },
-          height: 0,
-          minHeight: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          height: 1,
         }}
       >
-        <Paper
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-            height: 1,
-          }}
-        >
-          <Wizard frames={FRAMES} />
-        </Paper>
+        <Wizard frames={FRAMES} />
+      </Paper>
+      <Box
+        sx={{
+          alignItems: 'center',
+          aspectRatio: '715 / 1001', // NOTE Or 5:7
+          display: { xs: 'none', md: 'flex' },
+          height: 1,
+          justifyContent: 'center',
+        }}
+      >
+        {frame ? (
+          <Preview
+            height={1001}
+            url={`/frames/${frame}`}
+            sx={{ height: 1, width: 1 }}
+            width={715}
+          />
+        ) : (
+          <Typography component="em" sx={{ color: 'text.secondary' }}>
+            Select a frame in order to start the customization.
+          </Typography>
+        )}
       </Box>
-      {frame && (
-        <Box
-          sx={{
-            bgcolor: 'common.black',
-            borderRadius: 4,
-            boxShadow: 4,
-            display: { xs: 'none', md: 'block' },
-            overflow: 'hidden',
-          }}
-        >
-          <Box
-            sx={{
-              aspectRatio: '715 / 1001', // NOTE Or 5:7
-              height: 1,
-              position: 'relative',
-            }}
-          >
-            <Image alt="Back" fill src={`/frames/${frame}`} />
-          </Box>
-        </Box>
-      )}
     </Box>
   );
 };
