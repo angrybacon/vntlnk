@@ -58,8 +58,10 @@ export const ProxyMaker = ({ ...values }: Props) => {
         {frame ? (
           <Preview
             height={1001}
+            overlay
             url={`/frames/${frame}`}
             sx={{ height: 1, width: 1 }}
+            values={values}
             width={715}
           />
         ) : (

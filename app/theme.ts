@@ -7,10 +7,24 @@ export const theme = responsiveFontSizes(
   createTheme({
     components: {
       MuiCssBaseline: {
-        styleOverrides: {
-          html: { fontSize: 18 },
-          pre: { margin: 0 },
-        },
+        styleOverrides: `
+          html { fontSize: 18 }
+          pre { margin: 0 }
+          @font-face {
+            font-display: swap;
+            font-family: 'Goudy Mediaeval Alternate';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Goudy Mediaeval Alternate'), url(/fonts/mediaeval.alternate.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'Goudy Mediaeval Regular';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Goudy Mediaeval Regular'), url(/fonts/mediaeval.regular.ttf);
+          }
+        `,
       },
       MuiDialog: {
         styleOverrides: { paper: { borderRadius: 16 } },
