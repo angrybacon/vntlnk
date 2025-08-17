@@ -15,8 +15,8 @@ import { useCallback, useRef, type ChangeEvent } from 'react';
 
 const FIELD_STYLES = {
   FULL: { flexBasis: '100%' },
-  SMALL: { flexBasis: 0, minWidth: 160 },
-  WIDE: { flexBasis: 0, minWidth: 300 },
+  SMALL: { flexBasis: 0, flexGrow: 1, minWidth: 160 },
+  WIDE: { flexBasis: 0, flexGrow: 1, minWidth: 300 },
 } as const satisfies Record<string, SxProps>;
 
 type Props = {
@@ -101,12 +101,13 @@ export const Wizard = ({ frames }: Props) => {
       <TextField
         {...makeProperties('text', 'Text box')}
         maxRows={8}
-        minRows={4} // TODO This causes CLS
+        minRows={2}
         multiline
         sx={FIELD_STYLES.FULL}
       />
       <TextField
         {...makeProperties('flavor', 'Flavor text')}
+        maxRows={8}
         minRows={2}
         multiline
         sx={FIELD_STYLES.FULL}
