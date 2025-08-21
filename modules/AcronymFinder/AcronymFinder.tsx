@@ -64,7 +64,14 @@ export const AcronymFinder = () => {
           <TextField
             autoFocus
             fullWidth
-            helperText="Search for cards that match an acronym"
+            helperText={
+              <>
+                Search for cards that match an acronym
+                {cards.length || (querySafe && !isLoading)
+                  ? ` (${cards.length})`
+                  : ''}
+              </>
+            }
             inputRef={inputRoot}
             label="Your acronym"
             onChange={onInput}
