@@ -7,13 +7,24 @@ import {
   Select,
   TextField,
   textFieldClasses,
-  type SelectChangeEvent,
   type SxProps,
+  type TextFieldProps,
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useRef, type ChangeEvent } from 'react';
+import { useCallback, useRef } from 'react';
 
-import { type FIELDS } from '~/modules/ProxyMaker/fields';
+import { ScryField } from '~/modules/ProxyMaker/ScryField';
+
+const FIELDS = [
+  'ARTWORK',
+  'FLAVOR',
+  'FRAME',
+  'MANA',
+  'NAME',
+  'SUBTYPES',
+  'TEXT',
+  'TYPES',
+] as const;
 
 const FIELD_STYLES = {
   FULL: { flexBasis: '100%' },
@@ -30,36 +41,28 @@ export const Wizard = ({ frames }: Props) => {
   const parameters = useSearchParams();
   const initial = useRef(parameters);
 
-  const onChange = useCallback(
-    <TKind extends 'text' | 'select'>({
-      target,
-    }: TKind extends 'text'
-      ? ChangeEvent<HTMLInputElement>
-      : TKind extends 'select'
-        ? SelectChangeEvent
-        : never) => {
+  const onSave = useCallback(
+    (name: string, value: string | undefined) => {
       const query = new URLSearchParams(parameters.toString());
-      if (target.value) query.set(target.name, target.value);
-      else query.delete(target.name);
+      if (value) query.set(name, value);
+      else query.delete(name);
       query.sort();
       router.replace(`?${query.toString()}`);
     },
     [parameters, router],
   );
 
-  const makeProperties = <TKind extends 'select' | 'text' = 'text'>(
-    name: (typeof FIELDS)[number],
-    label: String,
-  ) => {
-    const id = name.toLowerCase();
-    return {
-      defaultValue: initial.current.get(id) || '',
-      id,
-      label,
-      name: id,
-      onChange: onChange<TKind>, // TODO Throttle user input
-    } as const;
-  };
+  const makeProperties = useCallback(
+    (name: Lowercase<(typeof FIELDS)[number]>, label: String) =>
+      ({
+        defaultValue: initial.current.get(name) || '',
+        label,
+        name,
+        onChange: (event: { target: { name: string; value: string } }) =>
+          onSave(event.target.name, event.target.value),
+      }) as const satisfies TextFieldProps,
+    [onSave],
+  );
 
   return (
     <Box
@@ -72,7 +75,7 @@ export const Wizard = ({ frames }: Props) => {
     >
       <FormControl sx={FIELD_STYLES.SMALL}>
         <InputLabel htmlFor="frame">Frame</InputLabel>
-        <Select {...makeProperties<'select'>('FRAME', 'Frame')} native>
+        <Select {...makeProperties('frame', 'Frame')} native>
           <option aria-label="None" value="" />
           {Object.entries(frames).map(([kind, colors]) => (
             <optgroup key={kind} label={kind}>
@@ -86,31 +89,32 @@ export const Wizard = ({ frames }: Props) => {
         </Select>
       </FormControl>
       <TextField
-        {...makeProperties('MANA', 'Mana cost')}
+        {...makeProperties('mana', 'Mana cost')}
         sx={FIELD_STYLES.SMALL}
       />
-      <TextField {...makeProperties('NAME', 'Name')} sx={FIELD_STYLES.WIDE} />
-      <TextField
-        {...makeProperties('ARTWORK', 'Artwork')}
+      <TextField {...makeProperties('name', 'Name')} sx={FIELD_STYLES.WIDE} />
+      <ScryField
+        inputProps={makeProperties('artwork', 'Artwork')}
+        onSave={onSave}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('TYPES', 'Types and supertypes')}
+        {...makeProperties('types', 'Types and supertypes')}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('SUBTYPES', 'Subtypes')}
+        {...makeProperties('subtypes', 'Subtypes')}
         sx={FIELD_STYLES.WIDE}
       />
       <TextField
-        {...makeProperties('TEXT', 'Text box')}
+        {...makeProperties('text', 'Text box')}
         maxRows={8}
         minRows={2}
         multiline
         sx={FIELD_STYLES.FULL}
       />
       <TextField
-        {...makeProperties('FLAVOR', 'Flavor text')}
+        {...makeProperties('flavor', 'Flavor text')}
         maxRows={8}
         minRows={2}
         multiline

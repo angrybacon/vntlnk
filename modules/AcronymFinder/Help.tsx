@@ -17,7 +17,7 @@ export const Help = ({ sx }: Props) => (
     <li>Default sorting is color then name, ascending</li>
     <li>Case is insensitive</li>
     <li>Only English card names are supported</li>
-    <li>Only the first 99 matches are displayed</li>
+    <li>No pagination, but images are lazily loaded</li>
     <li>
       Extra characters are not supported eg.{' '}
       <Acronym definition="Bloodbraid Elf" text="BBE" />
@@ -33,6 +33,14 @@ export const Help = ({ sx }: Props) => (
     <li>
       Abbreviations are not supported eg.{' '}
       <Acronym definition="Devil K. Nevil" text="DKN" />
+    </li>
+    <li>
+      Dual-face cards will come up in results but are impractical to search for
+      and broken eg.{' '}
+      <Acronym
+        definition="Jace, Vryn's Prodigy // Jace, Telepath Unbound"
+        text="JVPJTU"
+      />
     </li>
     <li>
       Queries are throttled, but there's no cache beyond that of your browser.
