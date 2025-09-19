@@ -1,50 +1,64 @@
 import { Box, type SxProps } from '@mui/material';
 import Image from 'next/image';
 
-import { FIELDS } from '~/modules/ProxyMaker/fields';
+import { Markdown } from '~/modules/ProxyMaker/Markdown';
 import { Zone } from '~/modules/ProxyMaker/Zone';
 
 type Props = {
   height: number;
-  overlay: boolean;
+  overlay?: boolean;
   sx: SxProps;
   url: string;
-  // TODO Hopepully we can sanitize this to plain strings
-  values: Record<string, string | string[]>;
+  values: Record<string, string | undefined>;
   width: number;
 };
 
-export const Preview = ({ height, overlay, url, sx, values, width }: Props) => (
-  <Box
-    sx={[
-      {
-        bgcolor: 'common.black',
-        borderRadius: 4,
-        boxShadow: 4,
-        color: 'common.white',
-        containerType: 'inline-size', // NOTE Required for container units
-        div: { position: 'absolute' },
-        img: { display: 'block', height: 1, width: 1 },
-        overflow: 'hidden',
-        position: 'relative',
-        textShadow: '0 0 4px black',
-      },
-      overlay && {
-        div: { border: '1px dashed white', borderRadius: 1 },
-      },
-      ...(Array.isArray(sx) ? sx : [sx]),
-    ]}
-  >
-    <Image
-      alt="Card frame"
-      height={height}
-      priority
-      src={url}
-      width={width}
-    />
-    {FIELDS.map((field) => {
-      const text = values[field.toLowerCase()];
-      return text && <Zone key={field} text={text} zone={field} />;
-    })}
-  </Box>
-);
+export const Preview = ({
+  height,
+  overlay = false,
+  url,
+  sx,
+  values,
+  width,
+}: Props) => {
+  const makeTextbox = (values: Record<string, string | undefined>) => {
+    const text = [values.text, values.flavor].filter(Boolean).join('\n\n');
+    const markdown = <Markdown text={text} />;
+    return markdown;
+  };
+
+  const makeTypeline = (values: Record<string, string | undefined>) => {
+    const { types, subtypes } = values;
+    return types && [types, subtypes].filter(Boolean).join(' — ');
+  };
+
+  return (
+    <Box
+      sx={[
+        {
+          bgcolor: 'common.black',
+          borderRadius: 4,
+          boxShadow: 4,
+          containerType: 'inline-size', // NOTE Required for container units
+          img: { display: 'block', height: 1, width: 1 },
+          overflow: 'hidden',
+          position: 'relative',
+        },
+        overlay && { img: { filter: 'blur(4px)' } },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
+      <Image
+        alt="Card frame"
+        height={height}
+        priority
+        src={url}
+        width={width}
+      />
+      <Zone content={values.name} highlight={overlay} zone="NAME" />
+      <Zone content={values.mana} highlight={overlay} zone="MANA" />
+      <Zone content={makeTypeline(values)} highlight={overlay} zone="TYPES" />
+      <Zone content={makeTextbox(values)} highlight={overlay} zone="TEXT" />
+    </Box>
+  );
+};

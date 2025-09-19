@@ -23,6 +23,7 @@ export const AcronymFinder = () => {
   const { setIsLoading } = useProgress();
   const inputRoot = useRef<ComponentRef<'input'>>(null);
   const [filter, setFilter, filterSafe] = useStateSafe(DEFAULT_FILTER);
+  // TODO Save querySafe in the search parameters
   const [query, setQuery, querySafe] = useStateSafe('');
 
   const getQuery = useCallback(() => {

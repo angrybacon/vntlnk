@@ -11,5 +11,12 @@ export default async function Page({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  return <ProxyMaker {...await searchParams} />;
+  const parameters = Object.fromEntries(
+    Object.entries(await searchParams).map(([key, value]) => [
+      key,
+      // NOTE We don't actually want to support multiple values per key
+      Array.isArray(value) ? value[0] : value,
+    ]),
+  );
+  return <ProxyMaker {...parameters} />;
 }

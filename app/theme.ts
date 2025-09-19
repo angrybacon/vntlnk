@@ -12,17 +12,31 @@ export const theme = responsiveFontSizes(
           pre { margin: 0 }
           @font-face {
             font-display: swap;
-            font-family: 'Goudy Mediaeval Alternate';
+            font-family: 'Matrix Bold';
             font-style: normal;
-            font-weight: 400;
-            src: local('Goudy Mediaeval Alternate'), url(/fonts/mediaeval.alternate.ttf);
+            font-weight: 700;
+            src: url(/fonts/matrix.bold.ttf);
           }
           @font-face {
             font-display: swap;
-            font-family: 'Goudy Mediaeval Regular';
+            font-family: 'Medieval';
             font-style: normal;
             font-weight: 400;
-            src: local('Goudy Mediaeval Regular'), url(/fonts/mediaeval.regular.ttf);
+            src: url(/fonts/medieval.regular.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'MPlantin';
+            font-style: italic;
+            font-weight: 400;
+            src: url(/fonts/plantin.italic.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'MPlantin';
+            font-style: normal;
+            font-weight: 400;
+            src: url(/fonts/plantin.regular.ttf);
           }
         `,
       },
