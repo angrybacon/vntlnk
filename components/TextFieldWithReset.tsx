@@ -6,7 +6,7 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
-import { type ComponentProps, type ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 
 const Adornment = ({ onClick }: { onClick(): void }) => (
   <InputAdornment position="end">
@@ -18,7 +18,7 @@ const Adornment = ({ onClick }: { onClick(): void }) => (
   </InputAdornment>
 );
 
-type Props = ComponentProps<typeof TextField> & {
+type Props = ComponentPropsWithoutRef<typeof TextField> & {
   errors?: { id: number; text: string }[] | string;
   isDirty: boolean;
   onReset(): void;

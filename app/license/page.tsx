@@ -12,10 +12,8 @@ const URLS = {
 export default function Page() {
   return (
     <>
-      <Typography gutterBottom variant="h2">
-        License and Resources
-      </Typography>
-      <Typography gutterBottom>
+      <Typography variant="h1">License and Resources</Typography>
+      <Typography>
         <em>Vntlnk</em> is unofficial <em>Magic: the Gathering</em> fan content
         permitted under the{' '}
         <Link href={URLS.WIZARDS_FCP}>Fan Content Policy</Link>. Portions of the
@@ -26,7 +24,7 @@ export default function Page() {
         older sets. For cropped arts where the artist line of a card is not
         visible, the artists are mentioned in the accessible text.
       </Typography>
-      <Typography gutterBottom>
+      <Typography>
         All original code is available under the terms of the{' '}
         <Link href={URLS.LICENSE}>MIT license</Link>. For more information about
         the underlying code, refer to the{' '}

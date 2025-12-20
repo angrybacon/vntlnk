@@ -6,6 +6,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import { type Metadata, type Viewport } from 'next';
+import { Roboto } from 'next/font/google';
 import { type PropsWithChildren } from 'react';
 
 import { theme } from '~/app/theme';
@@ -24,12 +25,22 @@ export const viewport: Viewport = {
   width: 'device-width',
 };
 
+const roboto = Roboto({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-roboto',
+  weight: ['300', '400', '500', '700'],
+});
+
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <html lang="en">
-        <body>
+    <html className={roboto.variable} lang="en">
+      <Box
+        component="body"
+        sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+      >
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <ProgressProvider>
             <Header />
             <Container
@@ -38,18 +49,17 @@ export default function Layout({ children }: PropsWithChildren) {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: 1,
-                pb: 2,
-                pt: { xs: 2, sm: 3 },
+                flexGrow: 1,
+                gap: { xs: 2, sm: 3 },
               }}
             >
               <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
               {children}
-              <Footer sx={{ flexShrink: 0, mt: 'auto', pt: 2 }} />
             </Container>
+            <Footer sx={{ mt: 'auto', p: { xs: 2, sm: 3 } }} />
           </ProgressProvider>
-        </body>
-      </html>
-    </ThemeProvider>
+        </ThemeProvider>
+      </Box>
+    </html>
   );
 }

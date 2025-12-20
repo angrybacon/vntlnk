@@ -14,13 +14,6 @@ export const Help = ({ sx }: Props) => (
       ...(Array.isArray(sx) ? sx : [sx]),
     ]}
   >
-    <Box component="li" sx={{ maxWidth: 600 }}>
-      <Box color="warning.main" component="span">
-        Yes I know images are sometimes broken.
-      </Box>{' '}
-      You've been too many too fast to use the service and all the monthly
-      credit has been depleted. I'll fix it soon :tm:
-    </Box>
     <li>Default sorting is color then name, ascending</li>
     <li>Case is insensitive</li>
     <li>Only English card names are supported</li>
