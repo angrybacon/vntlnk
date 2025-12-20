@@ -33,36 +33,34 @@ const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
 });
 
-export default function Layout({ children }: PropsWithChildren) {
-  return (
-    <html className={roboto.variable} lang="en">
-      <Box
-        component="body"
-        sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-      >
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <ProgressProvider>
-              <Header />
-              <Container
-                component="main"
-                maxWidth="xl"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  gap: { xs: 2, sm: 3 },
-                }}
-              >
-                <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
-                {children}
-              </Container>
-              <Footer sx={{ mt: 'auto', p: { xs: 2, sm: 3 } }} />
-            </ProgressProvider>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
-      </Box>
-    </html>
-  );
-}
+export default ({ children }: PropsWithChildren) => (
+  <html className={roboto.variable} lang="en">
+    <Box
+      component="body"
+      sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+    >
+      <AppRouterCacheProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ProgressProvider>
+            <Header />
+            <Container
+              component="main"
+              maxWidth="xl"
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                gap: { xs: 2, sm: 3 },
+              }}
+            >
+              <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
+              {children}
+            </Container>
+            <Footer sx={{ mt: 'auto', p: { xs: 2, sm: 3 } }} />
+          </ProgressProvider>
+        </ThemeProvider>
+      </AppRouterCacheProvider>
+    </Box>
+  </html>
+);

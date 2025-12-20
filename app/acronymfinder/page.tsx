@@ -6,6 +6,4 @@ export const metadata: Metadata = {
   title: 'Acronym Finder',
 };
 
-export default function Page() {
-  return <AcronymFinder />;
-}
+export default () => <AcronymFinder />;
