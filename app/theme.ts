@@ -22,6 +22,7 @@ export const theme = responsiveFontSizes(
         defaultProps: { placement: 'top' },
       },
     },
+    cssVariables: true,
     palette: {
       background: { default: grey[50] },
       mode: 'light',

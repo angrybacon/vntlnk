@@ -11,10 +11,10 @@ import {
   MenuItem,
   Toolbar,
 } from '@mui/material';
-import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, type MouseEvent } from 'react';
 
+import { Link } from '~/components/Link';
 import { useProgress } from '~/hooks/useProgress';
 
 const LINKS: [path: `/${string}`, label: string][] = [
@@ -37,7 +37,7 @@ export const Header = () => {
       <Toolbar sx={{ gap: 1 }}>
         <Button
           color="inherit"
-          component={NextLink}
+          component={Link}
           disableElevation
           href="/"
           variant="outlined"
@@ -48,13 +48,10 @@ export const Header = () => {
           {LINKS.map(([path, label]) => (
             <Button
               color={path === pathname ? 'secondary' : 'inherit'}
-              component={NextLink}
+              component={Link}
               href={path}
               key={path}
-              sx={{
-                display: { xs: 'none', sm: 'block' },
-                textAlign: 'center',
-              }}
+              sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'center' }}
             >
               {label}
             </Button>
@@ -78,7 +75,7 @@ export const Header = () => {
           >
             {LINKS.map(([path, label]) => (
               <MenuItem
-                component={NextLink}
+                component={Link}
                 href={path}
                 key={path}
                 onClick={onClose}

@@ -5,6 +5,7 @@ import {
   ThemeProvider,
   Toolbar,
 } from '@mui/material';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { type Metadata, type Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import { type PropsWithChildren } from 'react';
@@ -39,26 +40,28 @@ export default function Layout({ children }: PropsWithChildren) {
         component="body"
         sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       >
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <ProgressProvider>
-            <Header />
-            <Container
-              component="main"
-              maxWidth="xl"
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                gap: { xs: 2, sm: 3 },
-              }}
-            >
-              <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
-              {children}
-            </Container>
-            <Footer sx={{ mt: 'auto', p: { xs: 2, sm: 3 } }} />
-          </ProgressProvider>
-        </ThemeProvider>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <ProgressProvider>
+              <Header />
+              <Container
+                component="main"
+                maxWidth="xl"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  gap: { xs: 2, sm: 3 },
+                }}
+              >
+                <Toolbar role="presentation" sx={{ flexShrink: 0 }} />
+                {children}
+              </Container>
+              <Footer sx={{ mt: 'auto', p: { xs: 2, sm: 3 } }} />
+            </ProgressProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </Box>
     </html>
   );

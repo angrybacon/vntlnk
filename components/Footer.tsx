@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, type SxProps } from '@mui/material';
 
 import { Link } from '~/components/Link';
