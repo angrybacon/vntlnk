@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">=22.15.0"
+    "node": "24.12.0"
   },
   "name": "vntlnk",
   "private": true,
@@ -33,7 +33,7 @@
     "@korumite/ts": "1.1.0",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
-    "knip": "5.76.0",
+    "knip": "5.76.1",
     "prettier": "3.7.4",
     "typescript": "5.9.3"
   }
