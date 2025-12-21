@@ -20,6 +20,7 @@ import { useProgress } from '~/hooks/useProgress';
 const LINKS: [path: `/${string}`, label: string][] = [
   ['/acronymfinder', 'Acronym Finder'],
   ['/poisondartfrog', 'Poison Dart Frog'],
+  ['/proxymaker', 'Proxy Maker'],
 ];
 
 export const Header = () => {

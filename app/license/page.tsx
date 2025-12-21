@@ -24,6 +24,15 @@ export default () => (
       visible, the artists are mentioned in the accessible text.
     </Typography>
     <Typography>
+      The <em>Medieval Regular</em> typeface, as originally designed by Frederic
+      William Goudy under the name <em>Goudy Medi&aelig;val</em> appears to be
+      free of use (as in freedom of speech). It was however distributed
+      digitally by Dieter Steffmann and is very likely the copy that is used in
+      this project. It did not come with its own licensing so we assume that it
+      is equally free. If you believe this to be inaccurate, please contact us
+      through our mutual channels.
+    </Typography>
+    <Typography>
       All original code is available under the terms of the{' '}
       <Link href={URLS.LICENSE}>MIT license</Link>. For more information about
       the underlying code, refer to the{' '}

@@ -11,9 +11,7 @@ import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 const Adornment = ({ onClick }: { onClick(): void }) => (
   <InputAdornment position="end">
     <Tooltip title="Restore default value">
-      <IconButton onClick={onClick}>
-        <RestoreIcon />
-      </IconButton>
+      <IconButton children={<RestoreIcon />} onClick={onClick} size="small" />
     </Tooltip>
   </InputAdornment>
 );

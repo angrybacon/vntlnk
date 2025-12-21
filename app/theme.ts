@@ -7,10 +7,38 @@ export const theme = responsiveFontSizes(
   createTheme({
     components: {
       MuiCssBaseline: {
-        styleOverrides: {
-          html: { fontSize: 18 },
-          pre: { margin: 0 },
-        },
+        styleOverrides: `
+          html { fontSize: 18 }
+          pre { margin: 0 }
+          @font-face {
+            font-display: swap;
+            font-family: 'Matrix Bold';
+            font-style: normal;
+            font-weight: 700;
+            src: url(/fonts/matrix.bold.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'Medieval';
+            font-style: normal;
+            font-weight: 400;
+            src: url(/fonts/medieval.regular.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'MPlantin';
+            font-style: italic;
+            font-weight: 400;
+            src: url(/fonts/plantin.italic.ttf);
+          }
+          @font-face {
+            font-display: swap;
+            font-family: 'MPlantin';
+            font-style: normal;
+            font-weight: 400;
+            src: url(/fonts/plantin.regular.ttf);
+          }
+        `,
       },
       MuiDialog: {
         styleOverrides: { paper: { borderRadius: 16 } },

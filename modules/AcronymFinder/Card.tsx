@@ -3,7 +3,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { type Card as CardModel } from '~/modules/AcronymFinder/scry';
+import { type Card as CardModel } from '~/modules/Scry/typings';
 
 type Props = {
   card: CardModel;

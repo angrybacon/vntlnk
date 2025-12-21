@@ -2,9 +2,9 @@
 
 import { Box, Grid, TextField, Typography } from '@mui/material';
 import {
+  useCallback,
   useEffect,
   useRef,
-  useState,
   type ChangeEvent,
   type ComponentRef,
 } from 'react';
@@ -13,50 +13,35 @@ import { Link } from '~/components/Link';
 import { TextFieldWithReset } from '~/components/TextFieldWithReset';
 import { useProgress } from '~/hooks/useProgress';
 import { useStateSafe } from '~/hooks/useStateSafe';
-import { Card } from '~/modules/AcronymFinder/Card';
 import { Help } from '~/modules/AcronymFinder/Help';
-import {
-  scry,
-  type Card as CardModel,
-  type Warning,
-} from '~/modules/AcronymFinder/scry';
+import { MemoizedResults } from '~/modules/AcronymFinder/Results';
+import { useScry } from '~/modules/Scry/useScry';
 
 const DEFAULT_FILTER = 'prefer:oldest -s:lea f:legacy';
-const IMAGE_HEIGHT = 204;
-const IMAGE_WIDTH = 146;
 
 export const AcronymFinder = () => {
   const { setIsLoading } = useProgress();
   const inputRoot = useRef<ComponentRef<'input'>>(null);
-  const [cards, setCards] = useState<CardModel[]>([]);
-  const [error, setError] = useState<null | string>(null);
   const [filter, setFilter, filterSafe] = useStateSafe(DEFAULT_FILTER);
+  // TODO Save querySafe in the search parameters
   const [query, setQuery, querySafe] = useStateSafe('');
-  const [warnings, setWarnings] = useState<Warning[]>([]);
+
+  const getQuery = useCallback(() => {
+    const pattern = querySafe.split('').map((c) => `\\b${c}[^-\\s]*`);
+    return pattern.length
+      ? `name:\/^${pattern.join('([-\\s]| \\/\\/ )')}$\/`
+      : '';
+  }, [querySafe]);
+
+  const { cards, error, isLoading, warnings } = useScry({
+    extra: filterSafe,
+    order: 'color',
+    query: getQuery,
+  });
 
   useEffect(() => {
-    let should = true;
-    if (querySafe.length > 0) {
-      setIsLoading(true);
-      scry({ extra: filterSafe, query: querySafe }).then((response) => {
-        if (should) {
-          setError(null);
-          setWarnings(response.warnings);
-          if (response.object === 'list') {
-            // TODO Handle pagination
-            setCards(response.data.slice(0, 99));
-          } else if (response.object === 'error') {
-            setCards([]);
-            setError(response.details);
-          }
-        }
-        setIsLoading(false);
-      });
-    }
-    return () => {
-      should = false;
-    };
-  }, [filterSafe, querySafe]);
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const onFilter = ({ target }: ChangeEvent<HTMLInputElement>) =>
     setFilter(target.value);
@@ -80,7 +65,14 @@ export const AcronymFinder = () => {
           <TextField
             autoFocus
             fullWidth
-            helperText="Search for cards that match an acronym"
+            helperText={
+              <>
+                Search for cards that match an acronym
+                {cards.length || (querySafe && !isLoading)
+                  ? ` (${cards.length})`
+                  : ''}
+              </>
+            }
             inputRef={inputRoot}
             label="Your acronym"
             onChange={onInput}
@@ -124,25 +116,7 @@ export const AcronymFinder = () => {
         </Box>
       )}
       {!error && !cards.length && <Help sx={{ m: { sm: 'auto' } }} />}
-      {cards.length > 0 && (
-        <Box
-          sx={{
-            display: 'grid',
-            gap: { xs: 2, sm: 3 },
-            gridAutoRows: 'min-content',
-            gridTemplateColumns: `repeat(auto-fill, minmax(${IMAGE_WIDTH}px, 1fr))`,
-          }}
-        >
-          {cards.map((card) => (
-            <Card
-              card={card}
-              height={IMAGE_HEIGHT}
-              key={card.id}
-              width={IMAGE_WIDTH}
-            />
-          ))}
-        </Box>
-      )}
+      {cards.length > 0 && <MemoizedResults cards={cards} />}
     </Box>
   );
 };
